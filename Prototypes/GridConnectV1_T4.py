@@ -25,15 +25,27 @@ GRIDSIZE = 7
 GRIDWIDTH = 700
 GRIDHEIGHT = 700
 STEP = (GRIDWIDTH - (XMARGIN + YMARGIN))/GRIDSIZE
-
 NEURONSIZE = 14
+
 NEURON_LIST = []
+CONNECTIONS = []
 CONTROLS = []
+
 PLAY = False
 CONNECT = False
 DRAGGING = False
 DRAGSTART = (0, 0)
 FPS = 120
+
+class Connection():
+    def __init__(self,inputNeuronPos, targetNeuronPos):
+        self.inputNeuronPos = inputNeuronPos
+        self.targetNeuronPos = targetNeuronPos
+
+    def draw(self):
+        pygame.draw.line(DISPLAYSURF, WHITE, self.inputNeuronPos, self.targetNeuronPos, 1)
+        pygame.draw.circle(DISPLAYSURF, WHITE, self.targetNeuronPos ,4)
+
 
 class Neuron():
     def __init__(self, x, y):
@@ -137,6 +149,7 @@ def run():
             drawControls()
             updateNeurons()
             checkEvents()
+            drawConnections()
             redraw()
             CLOCK.tick(FPS)
 
@@ -155,11 +168,9 @@ def drawControls():
     CONTROLS[0].draw()
     CONTROLS[1].draw()
 
-
 def clearGrid():
     # Rect(left, top, width, height)
     pygame.draw.rect( DISPLAYSURF, BLACK, ( XMARGIN - NEURONSIZE, YMARGIN - NEURONSIZE, (GRIDSIZE*STEP) + NEURONSIZE*2, (GRIDSIZE*STEP) + NEURONSIZE*2 ))
-
 
 def clearScreen():
     DISPLAYSURF.fill(BLACK)
@@ -167,6 +178,10 @@ def clearScreen():
 def updateNeurons():
     for neuron in NEURON_LIST:
             neuron.updateNeuron()
+
+def drawConnections():
+    for connection in CONNECTIONS:
+            connection.draw()
 
 
 def initNeurons():
@@ -233,9 +248,13 @@ def checkEvents():
                                 DRAGSTART = (neuron.x, neuron.y)
                         DRAGGING = True
 
-        elif event.type == pygame.MOUSEBUTTONUP:
+        elif event.type == pygame.MOUSEBUTTONUP and DRAGGING:
             if event.button == 1:
-                DRAGGING = False
+                for neuron in NEURON_LIST:
+                    if neuron._rect.collidepoint(event.pos) and neuron.place:
+                        newCon = Connection(DRAGSTART, (neuron.x, neuron.y))
+                        CONNECTIONS.append(newCon)
+            DRAGGING = False
 
         # quit, cursors
         elif event.type == KEYDOWN and event.key == K_q:
