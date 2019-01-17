@@ -10,6 +10,7 @@ Connect Neuron to neuron ( UI only )
 import sys
 import pygame
 from pygame.locals import *
+from math import atan2, cos, sin
 
 SCREENSIZE = WIDTH, HEIGHT = 900, 700
 #              R    G   B
@@ -39,12 +40,30 @@ FPS = 120
 
 class Connection():
     def __init__(self,inputNeuronPos, targetNeuronPos):
+        self.markerSize = 4
         self.inputNeuronPos = inputNeuronPos
         self.targetNeuronPos = targetNeuronPos
+        # Math.atan2(toY - fromY, toX - fromX);
+        self.angle = atan2((targetNeuronPos[1] - inputNeuronPos[1]),
+        (targetNeuronPos[0]-inputNeuronPos[0]))
+        # x = a + r cos(θ)
+        # y = b + r sin(θ)
+        self.fromX = inputNeuronPos[0] + NEURONSIZE * cos(self.angle)
+        self.fromY = inputNeuronPos[1] + NEURONSIZE * sin(self.angle)
+        self.toX = targetNeuronPos[0] - NEURONSIZE * cos(self.angle)
+        self.toY = targetNeuronPos[1] - NEURONSIZE * sin(self.angle)
+        self.markerX = int(targetNeuronPos[0] - (NEURONSIZE + self.markerSize) * cos(self.angle))
+        self.markerY = int(targetNeuronPos[1] - (NEURONSIZE + self.markerSize) * sin(self.angle))
+
 
     def draw(self):
-        pygame.draw.line(DISPLAYSURF, WHITE, self.inputNeuronPos, self.targetNeuronPos, 1)
-        pygame.draw.circle(DISPLAYSURF, WHITE, self.targetNeuronPos ,4)
+        pygame.draw.line(DISPLAYSURF, WHITE,
+        (self.fromX,self.fromY),
+        (self.toX,self.toY),
+        1)
+        pygame.draw.circle(DISPLAYSURF, WHITE,
+        (self.markerX,self.markerY)
+        ,self.markerSize)
 
 
 class Neuron():
@@ -148,8 +167,8 @@ def run():
             drawGrid(DARKGREY)
             drawControls()
             updateNeurons()
-            checkEvents()
             drawConnections()
+            checkEvents()
             redraw()
             CLOCK.tick(FPS)
 
