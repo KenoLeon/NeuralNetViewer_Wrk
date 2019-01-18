@@ -15,7 +15,7 @@ from math import atan2, cos, sin
 SCREENSIZE = WIDTH, HEIGHT = 900, 700
 #              R    G   B
 BLACK     = ( 0,    0,   0)
-DARKGREY  = ( 80,  80,   80)
+DARKGREY  = ( 60,  60,   60)
 GREY      = (127, 127, 127)
 WHITE     = (255, 255, 255)
 RED       = (255,   0,   0)
@@ -57,11 +57,11 @@ class Connection():
 
 
     def draw(self):
-        pygame.draw.line(DISPLAYSURF, WHITE,
+        pygame.draw.line(DISPLAYSURF, GREY,
         (self.fromX,self.fromY),
         (self.toX,self.toY),
         1)
-        pygame.draw.circle(DISPLAYSURF, WHITE,
+        pygame.draw.circle(DISPLAYSURF, GREY,
         (self.markerX,self.markerY)
         ,self.markerSize)
 
