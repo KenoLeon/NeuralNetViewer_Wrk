@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 """
 
-Prototype of grid based neuron viewerself.
+Prototype of grid based neuron viewer.
 Connect fringe cases.
 Remove connections.
 
 """
+
+
+# TODO:
+# Try removing connection from list
 
 import sys
 import pygame
@@ -61,6 +65,8 @@ class Connection():
                            (NEURONSIZE + self.markerSize) * cos(self.angle))
         self.markerY = int(targetNeuronPos[1] -
                            (NEURONSIZE + self.markerSize) * sin(self.angle))
+        self._rect = pygame.draw.line(DISPLAYSURF, GREY, (self.fromX, self.fromY),
+                         (self.toX, self.toY), 3)
 
     def draw(self):
         pygame.draw.line(DISPLAYSURF, GREY, (self.fromX, self.fromY),
@@ -312,11 +318,19 @@ def checkEvents():
     for event in pygame.event.get():
         # Exit
         if event.type == pygame.QUIT: sys.exit()
+        # Hover Neurons
         elif event.type == pygame.MOUSEMOTION:
-            for neuron in NEURON_LIST:
-                if neuron._rect.collidepoint(event.pos):
-                    hovering = True
-            # Hover controls
+            if not REMOVECONNECT:
+                for neuron in NEURON_LIST:
+                    if neuron._rect.collidepoint(event.pos):
+                        hovering = True
+        # Hover Connections
+            if REMOVECONNECT:
+                for connection in CONNECTIONS:
+                    if connection._rect.collidepoint(event.pos):
+                        hovering = True
+
+        # Hover controls
             if CONTROLS[0]._rect.collidepoint(
                     event.pos) or CONTROLS[1]._rect.collidepoint(event.pos) or CONTROLS[2]._rect.collidepoint(event.pos):
                 hovering = True
@@ -324,13 +338,22 @@ def checkEvents():
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 # Place neuron
-                if not CONNECT:
+                if not CONNECT and not REMOVECONNECT:
                     for neuron in NEURON_LIST:
                         if neuron._rect.collidepoint(event.pos):
                             neuron.place = not neuron.place
                             neuron.draw()
                         else:
                             neuron.draw()
+                # Remove connection
+
+#
+#
+#
+# 
+#
+#
+
             # Controls:
             # PLAY
                 if CONTROLS[0]._rect.collidepoint(event.pos):
@@ -339,6 +362,9 @@ def checkEvents():
                     PLAY = not PLAY
             # CONNECT
                 if CONTROLS[1]._rect.collidepoint(event.pos):
+                    if CONTROLS[2].removeConnect:
+                        CONTROLS[2].removeConnect = False
+                        CONTROLS[2].draw()
                     CONTROLS[1].connect = not CONTROLS[1].connect
                     CONTROLS[1].draw()
                     CONNECT = not CONNECT
