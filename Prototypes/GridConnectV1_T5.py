@@ -1,15 +1,7 @@
 #!/usr/bin/env python
 """
-
 Prototype of grid based neuron viewer.
-Connect fringe cases.
-Remove connections.
-
 """
-
-
-# TODO:
-# Try removing connection from list
 
 import sys
 import pygame
