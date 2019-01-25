@@ -346,13 +346,10 @@ def checkEvents():
                         else:
                             neuron.draw()
                 # Remove connection
-
-#
-#
-#
-# 
-#
-#
+                if REMOVECONNECT:
+                    for connection in CONNECTIONS:
+                        if connection._rect.collidepoint(event.pos):
+                            CONNECTIONS.remove(connection)
 
             # Controls:
             # PLAY
