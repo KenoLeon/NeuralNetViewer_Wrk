@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 """
+
 Prototype of grid based neuron viewer.
+Axon propagation
+
 """
 
 import sys
