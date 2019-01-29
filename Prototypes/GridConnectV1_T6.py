@@ -2,7 +2,7 @@
 """
 
 Prototype of grid based neuron viewer.
-Axon propagation
+Axon propagation & Neuron Firing
 
 """
 
@@ -60,8 +60,9 @@ class Connection():
                            (NEURONSIZE + self.markerSize) * cos(self.angle))
         self.markerY = int(targetNeuronPos[1] -
                            (NEURONSIZE + self.markerSize) * sin(self.angle))
-        self._rect = pygame.draw.line(DISPLAYSURF, GREY, (self.fromX, self.fromY),
-                         (self.toX, self.toY), 3)
+        self._rect = pygame.draw.line(DISPLAYSURF, GREY,
+                                      (self.fromX, self.fromY),
+                                      (self.toX, self.toY), 3)
 
     def draw(self):
         pygame.draw.line(DISPLAYSURF, GREY, (self.fromX, self.fromY),
@@ -86,17 +87,22 @@ class Neuron():
 
     def updateNeuron(self):
         if PLAY and self.place:
-            if (self.baseNeuroTransmitter <= 1):
+            if self.baseNeuroTransmitter < 1:
                 self.baseNeuroTransmitter += self.ntRelease
-            else:
+                self.draw(GREY)
+            elif self.baseNeuroTransmitter >= 1:
+                # Neuron is firing
+                self.draw(RED)
                 self.baseNeuroTransmitter = 0
-        self.draw()
+        else:
+            self.draw()
 
-    def draw(self):
+    def draw(self, color=GREY):
         if self.place:
-            pygame.draw.circle(DISPLAYSURF, GREY, (self.x, self.y), NEURONSIZE)
+            pygame.draw.circle(DISPLAYSURF, color, (self.x, self.y),
+                               NEURONSIZE)
             pygame.draw.rect(DISPLAYSURF, BLACK, self.clipRect())
-            return pygame.draw.circle(DISPLAYSURF, GREY, (self.x, self.y),
+            return pygame.draw.circle(DISPLAYSURF, color, (self.x, self.y),
                                       NEURONSIZE, 1)
         elif not self.place:
             self.baseNeuroTransmitter = 0.4
@@ -175,22 +181,22 @@ class connectRemoveControl():
         self.offsetY = YMARGIN
         self._rect = self.draw()
 
-
     def draw(self):
         if self.removeConnect:
             pygame.draw.circle(DISPLAYSURF, GREY,
                                (self.offsetX + 10, self.offsetY + 96), 10)
             pygame.draw.circle(DISPLAYSURF, GREY,
                                (self.offsetX + 50, self.offsetY + 96), 10)
-            pygame.draw.line(DISPLAYSURF, GREY, (self.offsetX + 18, self.offsetY + 96),
+            pygame.draw.line(DISPLAYSURF, GREY,
+                             (self.offsetX + 18, self.offsetY + 96),
                              (self.offsetX + 40, self.offsetY + 96), 1)
 
             pygame.draw.line(DISPLAYSURF, RED,
-            (self.offsetX + 24, self.offsetY + 91),
-            (self.offsetX + 36, self.offsetY + 101), 2)
+                             (self.offsetX + 24, self.offsetY + 91),
+                             (self.offsetX + 36, self.offsetY + 101), 2)
             pygame.draw.line(DISPLAYSURF, RED,
-            (self.offsetX + 36, self.offsetY + 91),
-            (self.offsetX + 24, self.offsetY + 101), 2)
+                             (self.offsetX + 36, self.offsetY + 91),
+                             (self.offsetX + 24, self.offsetY + 101), 2)
 
         else:
             pygame.draw.rect(DISPLAYSURF, BLACK,
@@ -199,16 +205,18 @@ class connectRemoveControl():
                                (self.offsetX + 10, self.offsetY + 96), 10, 1)
             pygame.draw.circle(DISPLAYSURF, GREY,
                                (self.offsetX + 50, self.offsetY + 96), 10, 1)
-            pygame.draw.line(DISPLAYSURF, GREY, (self.offsetX + 18, self.offsetY + 96),
+            pygame.draw.line(DISPLAYSURF, GREY,
+                             (self.offsetX + 18, self.offsetY + 96),
                              (self.offsetX + 40, self.offsetY + 96), 1)
 
             pygame.draw.line(DISPLAYSURF, GREY,
-            (self.offsetX + 24, self.offsetY + 91),
-            (self.offsetX + 36, self.offsetY + 101), 2)
+                             (self.offsetX + 24, self.offsetY + 91),
+                             (self.offsetX + 36, self.offsetY + 101), 2)
             pygame.draw.line(DISPLAYSURF, GREY,
-            (self.offsetX + 36, self.offsetY + 91),
-            (self.offsetX + 24, self.offsetY + 101), 2)
+                             (self.offsetX + 36, self.offsetY + 91),
+                             (self.offsetX + 24, self.offsetY + 101), 2)
             return pygame.Rect(self.offsetX, self.offsetY + 96, 60, 20)
+
 
 def main():
     # Setup...
@@ -312,8 +320,9 @@ def checkEvents():
     hovering = False
     for event in pygame.event.get():
         # Exit
-        if event.type == pygame.QUIT: sys.exit()
-        # Hover Neurons
+        if event.type == pygame.QUIT:
+            sys.exit()
+            # Hover Neurons
         elif event.type == pygame.MOUSEMOTION:
             if not REMOVECONNECT:
                 for neuron in NEURON_LIST:
@@ -327,7 +336,9 @@ def checkEvents():
 
         # Hover controls
             if CONTROLS[0]._rect.collidepoint(
-                    event.pos) or CONTROLS[1]._rect.collidepoint(event.pos) or CONTROLS[2]._rect.collidepoint(event.pos):
+                    event.pos) or CONTROLS[1]._rect.collidepoint(
+                        event.pos) or CONTROLS[2]._rect.collidepoint(
+                            event.pos):
                 hovering = True
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -387,6 +398,8 @@ def checkEvents():
                             event.pos) and neuron.place and (FROMNEURON !=
                                                              neuron):
                         TONEURON = neuron
+
+                        # Create new connection:
                         newCon = Connection(DRAGSTART, (neuron.x, neuron.y))
                         CONNECTIONS.append(newCon)
             DRAGGING = False
