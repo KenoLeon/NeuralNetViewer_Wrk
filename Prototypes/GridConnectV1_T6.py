@@ -1,8 +1,11 @@
 #!/usr/bin/env python
+
 """
 
+
 Prototype of grid based neuron viewer.
-Axon propagation & Neuron Firing
+Axon propagation & Neuron Firing.
+
 
 """
 
@@ -64,6 +67,9 @@ class Connection():
                                       (self.fromX, self.fromY),
                                       (self.toX, self.toY), 3)
 
+    def update(self):
+        pass
+
     def draw(self):
         pygame.draw.line(DISPLAYSURF, GREY, (self.fromX, self.fromY),
                          (self.toX, self.toY), 1)
@@ -77,23 +83,23 @@ class Neuron():
         self.y = y
         self.place = False
         self._rect = self.draw()
-        self.baseNeuroTransmitter = 0.4
+        self.ntLevel = 0.4
         self.ntRelease = 0.1
 
     def clipRect(self):
         clipRect = self._rect.copy()
-        clipRect.height = clipRect.height * (1 - self.baseNeuroTransmitter)
+        clipRect.height = clipRect.height * (1 - self.ntLevel)
         return clipRect
 
     def updateNeuron(self):
         if PLAY and self.place:
-            if self.baseNeuroTransmitter < 1:
-                self.baseNeuroTransmitter += self.ntRelease
+            if self.ntLevel < 1:
+                self.ntLevel += self.ntRelease
                 self.draw(GREY)
-            elif self.baseNeuroTransmitter >= 1:
+            elif self.ntLevel >= 1:
                 # Neuron is firing
                 self.draw(RED)
-                self.baseNeuroTransmitter = 0
+                self.ntLevel = 0
         else:
             self.draw()
 
@@ -105,7 +111,7 @@ class Neuron():
             return pygame.draw.circle(DISPLAYSURF, color, (self.x, self.y),
                                       NEURONSIZE, 1)
         elif not self.place:
-            self.baseNeuroTransmitter = 0.4
+            self.ntLevel = 0.4
             return pygame.draw.circle(DISPLAYSURF, BLACK, (self.x, self.y),
                                       NEURONSIZE + 1)
 
@@ -131,8 +137,7 @@ class playControl():
             return pygame.draw.polygon(
                 DISPLAYSURF, GREY, ((self.offsetX, self.offsetY),
                                     (self.offsetX, self.offsetY + 25),
-                                    (self.offsetX + 25, self.offsetY + 12.5)),
-                1)
+                                    (self.offsetX + 25, self.offsetY + 12.5)),1)
 
 
 class connectControl():
