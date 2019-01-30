@@ -2,10 +2,8 @@
 
 """
 
-
 Prototype of grid based neuron viewer.
-Axon propagation & Neuron Firing.
-
+Axon propagation & Neuron Firing, fixed weights
 
 """
 
@@ -46,15 +44,15 @@ FPS = 20
 
 
 class Connection():
-    def __init__(self, inputNeuronPos, targetNeuronPos):
+    def __init__(self, inputNeuronPos, targetNeuronPos, fromNeuron, toNeuron):
+
         self.markerSize = 3
         self.inputNeuronPos = inputNeuronPos
         self.targetNeuronPos = targetNeuronPos
-        # Math.atan2(toY - fromY, toX - fromX);
+        self.fromNeuron = fromNeuron
+        self.toNeuron = toNeuron
         self.angle = atan2((targetNeuronPos[1] - inputNeuronPos[1]),
                            (targetNeuronPos[0] - inputNeuronPos[0]))
-        # x = a + r cos(θ)
-        # y = b + r sin(θ)
         self.fromX = inputNeuronPos[0] + NEURONSIZE * cos(self.angle)
         self.fromY = inputNeuronPos[1] + NEURONSIZE * sin(self.angle)
         self.toX = targetNeuronPos[0] - NEURONSIZE * cos(self.angle)
@@ -68,12 +66,16 @@ class Connection():
                                       (self.toX, self.toY), 3)
 
     def update(self):
-        pass
+        if self.fromNeuron.ntLevel >= 1:
+            self.draw(RED)
+            self.toNeuron.ntLevel += .1
+        else:
+            self.draw()
 
-    def draw(self):
-        pygame.draw.line(DISPLAYSURF, GREY, (self.fromX, self.fromY),
+    def draw(self, color = GREY):
+        pygame.draw.line(DISPLAYSURF, color, (self.fromX, self.fromY),
                          (self.toX, self.toY), 1)
-        pygame.draw.circle(DISPLAYSURF, GREY, (self.markerX, self.markerY),
+        pygame.draw.circle(DISPLAYSURF, color, (self.markerX, self.markerY),
                            self.markerSize)
 
 
@@ -291,7 +293,7 @@ def updateNeurons():
 
 def drawConnections():
     for connection in CONNECTIONS:
-        connection.draw()
+        connection.update()
 
 
 def initNeurons():
@@ -399,13 +401,10 @@ def checkEvents():
         elif event.type == pygame.MOUSEBUTTONUP and DRAGGING:
             if event.button == 1:
                 for neuron in NEURON_LIST:
-                    if neuron._rect.collidepoint(
-                            event.pos) and neuron.place and (FROMNEURON !=
-                                                             neuron):
+                    if neuron._rect.collidepoint(event.pos) and neuron.place and (FROMNEURON != neuron):
                         TONEURON = neuron
-
-                        # Create new connection:
-                        newCon = Connection(DRAGSTART, (neuron.x, neuron.y))
+                        # Create new connection
+                        newCon = Connection(DRAGSTART, (neuron.x, neuron.y),FROMNEURON, TONEURON )
                         CONNECTIONS.append(newCon)
             DRAGGING = False
 
