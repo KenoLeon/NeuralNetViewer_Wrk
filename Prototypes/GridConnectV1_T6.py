@@ -5,7 +5,14 @@
 Prototype of grid based neuron viewer.
 Axon propagation & Neuron Firing, fixed weights
 
+Final prototype...
+Migrating to Kivvy !
+
 """
+
+# TODO: bug on stop
+
+
 
 import sys
 import pygame
