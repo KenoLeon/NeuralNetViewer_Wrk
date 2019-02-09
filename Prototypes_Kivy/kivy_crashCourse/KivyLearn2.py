@@ -9,24 +9,32 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ListProperty, ObjectProperty
 
-import random
+from kivy.graphics.vertex_instructions import (Rectangle, Ellipse, Line)
+from kivy.graphics.context_instructions import Color
 
-# APP SOURCE: https://github.com/kivy/kivy/blob/master/kivy/app.py
-# WIDGETS: https://kivy.org/doc/stable/api-kivy.uix.html
-# CRASH COURSE: http://inclem.net/pages/kivy-crash-course/
+import random
 
 
 class ScatterTextWidget(BoxLayout):
     text_colour = ObjectProperty([1, 0, 0, 1])
 
+    def __init__(self, **kwargs):
+        super(ScatterTextWidget, self).__init__(**kwargs)
+
+        with self.canvas:
+            Color(0, 1, 0, 1)
+            Rectangle(pos=(0, 100), size=(300, 100))
+            Ellipse(pos =(0, 400), size=(300, 100))
+            Line(points=[0, 0, 500, 600, 400, 300], close=True, width=3)
+
     def change_label_colour(self, *args):
         colour = [random.random() for i in range(3)] + [1]
         self.text_colour = colour
 
-class App(App):
+class App2(App):
     def build(self):
         return ScatterTextWidget()
 
 
 if __name__ == '__main__':
-    App().run()
+    App2().run()
