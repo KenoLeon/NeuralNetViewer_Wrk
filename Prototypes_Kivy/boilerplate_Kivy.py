@@ -15,10 +15,6 @@ Config.set('graphics', 'height', '800')
 class boilerPlateApp(App):
     def build(self):
         layout = BoxLayout()
-        # btn1 = Button(text='Button 1 ')
-        # btn2 = Button(text='Button 2')
-        # layout.add_widget(btn1)
-        # layout.add_widget(btn2)
         return layout
 
 if __name__ == '__main__':
