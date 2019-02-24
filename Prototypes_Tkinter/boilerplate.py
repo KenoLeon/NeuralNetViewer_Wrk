@@ -18,7 +18,7 @@ root.configure(background='black')
 
 # Screen split:
 
-sidebar = tk.Frame(root, width=200, bg='#212121', height=500, relief='flat', borderwidth=1)
+sidebar = tk.Frame(root, width=300, bg='#212121', height=500, relief='flat', borderwidth=1, padx =10)
 sidebar.pack(expand=False, fill='both', side='right', anchor='nw')
 
 # main content area
@@ -27,20 +27,17 @@ mainarea.pack(expand=True, fill='both', side='left')
 
 # Widgets:
 
+def callback():
+    print("click!")
 
 
+# w = tk.Button(sidebar, text="Play", command=callback)
+# w.pack(fill=tk.X, pady = 2, padx = 4 )
 
-w = tk.Label(sidebar, text="Play/Stop", background='#2b2b2b', fg="lightgrey")
-w.pack(fill=tk.X, pady = 2, padx = 4 )
 w = tk.Label(sidebar, text="FPS", background='#2b2b2b', fg="lightgrey")
 w.pack(fill=tk.X, pady = 2, padx = 4)
 w = tk.Label(sidebar, text="Place Neurons", background='#2b2b2b', fg="lightgrey")
 w.pack(fill=tk.X, pady = 2, padx = 4)
-
-# w = tk.Label(sidebar, text="Such Label very wow")
-# w.configure(background='#2b2b2b')
-# w.configure(foreground='lightgrey')
-# w.pack()
 
 # Loop
 root.mainloop()
