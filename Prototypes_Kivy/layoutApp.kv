@@ -1,12 +1,55 @@
 BoxLayout:
+    id: top_box
     orientation: 'vertical'
     BoxLayout:
         Button:
-            size_hint_x: 2
+            size_hint_x: None
+            width: top_box.width - bottom_box.width
         BoxLayout:
+            padding: 4
+            id: bottom_box
             orientation: 'vertical'
-            size_hint_x: 0.5
+            size_hint_x: None
+            width: 200
+            spacing: 2
             Button:
+                id: button_1
+                background_normal: ''
+                background_color: .2, .2, .2, 1
+                text: 'Button 1'
+                color: .6, .6, .6, 1
+                size_hint_x: None
+                size_hint_y: None
+                width: 192
+                height: 40
             Button:
+                id: button_2
+                background_normal: ''
+                background_color: .2, .2, .2, 1
+                text: 'Button 2'
+                color: .6, .6, .6, 1
+                size_hint_x: None
+                size_hint_y: None
+                width: 192
+                height: 40
             Button:
+                id: button_3
+                background_normal: ''
+                background_color: .2, .2, .2, 1
+                text: 'Button 3'
+                color: .6, .6, .6, 1
+                size_hint_x: None
+                size_hint_y: None
+                width: 192
+                height: 40
             Button:
+                id: button_4
+                background_normal: ''
+                background_color: .2, .2, .2, 1
+                text: 'Button 4'
+                color: .6, .6, .6, 1
+                size_hint_x: None
+                size_hint_y: None
+                width: 192
+                height: 40
+            Widget:
