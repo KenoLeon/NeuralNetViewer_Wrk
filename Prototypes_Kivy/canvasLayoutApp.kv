@@ -2,10 +2,22 @@ BoxLayout:
     id: top_box
     orientation: 'vertical'
     BoxLayout:
+        canvas:
+            Color:
+                rgb: 0.4, 0.4, 0.4
+            Rectangle:
+                pos: self.pos
+                size: self.size
         Widget:
             size_hint_x: None
             width: top_box.width - bottom_box.width
         BoxLayout:
+            canvas:
+                Color:
+                    rgb: 0.1, 0.1, 0.1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
             padding: 4
             id: bottom_box
             orientation: 'vertical'
