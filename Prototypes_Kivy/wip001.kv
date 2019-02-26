@@ -1,0 +1,67 @@
+BoxLayout:
+    id: top_box
+    orientation: 'vertical'
+    BoxLayout:
+        canvas:
+            Color:
+                rgb: 0.4, 0.4, 0.4
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Widget:
+            size_hint_x: None
+            width: top_box.width - bottom_box.width
+        BoxLayout:
+            canvas:
+                Color:
+                    rgb: 0.1, 0.1, 0.1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            padding: 4
+            id: bottom_box
+            orientation: 'vertical'
+            size_hint_x: None
+            width: 200
+            spacing: 2
+            Button:
+                id: button_1
+                background_normal: ''
+                background_color: .2, .2, .2, 1
+                text: 'play/stop'
+                color: .6, .6, .6, 1
+                size_hint_x: None
+                size_hint_y: None
+                width: 192
+                height: 40
+            Button:
+                id: button_2
+                background_normal: ''
+                background_color: .2, .2, .2, 1
+                text: 'Place'
+                color: .6, .6, .6, 1
+                size_hint_x: None
+                size_hint_y: None
+                width: 192
+                height: 40
+            Button:
+                id: button_3
+                background_normal: ''
+                background_color: .2, .2, .2, 1
+                text: 'Remove'
+                color: .6, .6, .6, 1
+                size_hint_x: None
+                size_hint_y: None
+                width: 192
+                height: 40
+            Button:
+                id: button_4
+                background_normal: ''
+                background_color: .2, .2, .2, 1
+                text: 'Connect'
+                color: .6, .6, .6, 1
+                size_hint_x: None
+                size_hint_y: None
+                width: 192
+                height: 40
+            Widget:
