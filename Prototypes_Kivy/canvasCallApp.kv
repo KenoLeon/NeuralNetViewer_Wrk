@@ -1,7 +1,19 @@
-BoxLayout:
+# canvasCallApp.kv...
+<RootLayout>:
+    id: left_box
     canvas:
         Color:
             rgb: 0.6, 0.6, 0.6
         Rectangle:
             pos: self.pos
             size: self.size
+    Widget:
+        id: left_widget
+        size_hint_x: None
+        width: left_box.width - right_box.width
+    BoxLayout:
+        width: 200
+        id: right_box
+        Button:
+            text: 'I ma a button'
+            on_press: app.update()
