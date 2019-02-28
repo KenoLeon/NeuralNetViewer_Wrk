@@ -6,8 +6,6 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from random import random as r
 
-class rootLayout(BoxLayout):
-    pass
 
 class rootCanvas(Widget):
     def __init__(self, **kwargs):
@@ -19,7 +17,6 @@ class rootCanvas(Widget):
         self.bind(pos=self.update_rect)
         self.bind(size=self.update_rect)
 
-
     def update_rect(self, *args):
         self.rect.pos = self.pos
         self.rect.size = (self.size[0], self.size[1])
@@ -30,18 +27,20 @@ class rootCanvas(Widget):
             self.rect = Rectangle(pos=self.pos, size=self.size)
 
 
-class test01(App):
+class canvasTest(App):
     def build(self):
-        root = rootLayout()
-        side = BoxLayout(size=(200, 100), size_hint=(None, 1))
+        root = BoxLayout()
+        sideBar = BoxLayout(size=(200, 100), size_hint=(None, 1))
         widget = rootCanvas()
         root.add_widget(widget)
-        btn_1 = Button(text='Change Canvas Color',width=200,on_press=widget.change_color)
-        side.add_widget(btn_1)
-        root.add_widget(side)
+        btn_1 = Button(
+            text='Change Canvas Color',
+            width=200,
+            on_press=widget.change_color)
+        sideBar.add_widget(btn_1)
+        root.add_widget(sideBar)
         return root
 
 
-
 if __name__ == '__main__':
-    test01().run()
+    canvasTest().run()
