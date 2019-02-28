@@ -1,3 +1,5 @@
+# canvasTest.py...
+
 from kivy.app import App
 from kivy.graphics import Rectangle
 from kivy.graphics import Color
