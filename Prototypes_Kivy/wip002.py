@@ -1,4 +1,19 @@
-# canvasTest.py...
+#!/usr/bin/env python
+
+"""
+NNV - wip 002 :
+Layout + canvas
+
+To Do:
+
+learn Kivy :
+- Canvas Animations
+
+wip 003 :
+-Grid
+
+"""
+
 
 from kivy.app import App
 from kivy.graphics import Rectangle
