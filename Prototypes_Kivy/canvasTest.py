@@ -13,15 +13,22 @@ class rootCanvas(Widget):
     def __init__(self, **kwargs):
         super(rootCanvas, self).__init__(**kwargs)
         with self.canvas:
-            Color(r(), 1, 1, mode='hsv')
+            Color(1, 1, 1, mode='rgb')
             self.rect = Rectangle(pos=self.pos, size=self.size)
-
-        self.bind(pos=self.update_rect)
         self.bind(size=self.update_rect)
+        self.bind(size=self.draw)
+
 
     def update_rect(self, *args):
         self.rect.pos = self.pos
         self.rect.size = (self.size[0], self.size[1])
+
+
+    def draw(self,*args):
+        self.canvas.clear()
+        with self.canvas:
+            Color(1,1,1, mode='rgb')
+            Line(points=[0,0,self.rect.size[0],self.rect.size[1]], width=1)
 
 
     def change_color(self, *args):
@@ -32,18 +39,9 @@ class rootCanvas(Widget):
 
             Color(0,0,0, mode='rgb')
             Line(points=[0,0,self.rect.size[0],self.rect.size[1]], width=1)
-            Line(points=[0,100,self.rect.size[0],self.rect.size[1]], width=1)
-            Line(points=[0,200,self.rect.size[0],self.rect.size[1]], width=1)
-            Line(points=[0,300,self.rect.size[0],self.rect.size[1]], width=1)
-            Line(points=[0,400,self.rect.size[0],self.rect.size[1]], width=1)
-            Line(points=[0,500,self.rect.size[0],self.rect.size[1]], width=1)
 
-            Line(points=[0,0,self.rect.size[0],self.rect.size[1]], width=1)
-            Line(points=[100,0,self.rect.size[0],self.rect.size[1]], width=1)
-            Line(points=[200,0,self.rect.size[0],self.rect.size[1]], width=1)
-            Line(points=[300,0,self.rect.size[0],self.rect.size[1]], width=1)
-            Line(points=[400,0,self.rect.size[0],self.rect.size[1]], width=1)
-            Line(points=[500,0,self.rect.size[0],self.rect.size[1]], width=1)
+
+
 
 class canvasTest(App):
     def build(self):
