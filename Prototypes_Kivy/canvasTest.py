@@ -2,7 +2,7 @@
 
 from kivy.app import App
 from kivy.graphics import Rectangle
-from kivy.graphics import Color
+from kivy.graphics import Color, Line
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -23,11 +23,27 @@ class rootCanvas(Widget):
         self.rect.pos = self.pos
         self.rect.size = (self.size[0], self.size[1])
 
+
     def change_color(self, *args):
+
         with self.canvas:
             Color(r(), 1, 1, mode='hsv')
             self.rect = Rectangle(pos=self.pos, size=self.size)
 
+            Color(0,0,0, mode='rgb')
+            Line(points=[0,0,self.rect.size[0],self.rect.size[1]], width=1)
+            Line(points=[0,100,self.rect.size[0],self.rect.size[1]], width=1)
+            Line(points=[0,200,self.rect.size[0],self.rect.size[1]], width=1)
+            Line(points=[0,300,self.rect.size[0],self.rect.size[1]], width=1)
+            Line(points=[0,400,self.rect.size[0],self.rect.size[1]], width=1)
+            Line(points=[0,500,self.rect.size[0],self.rect.size[1]], width=1)
+
+            Line(points=[0,0,self.rect.size[0],self.rect.size[1]], width=1)
+            Line(points=[100,0,self.rect.size[0],self.rect.size[1]], width=1)
+            Line(points=[200,0,self.rect.size[0],self.rect.size[1]], width=1)
+            Line(points=[300,0,self.rect.size[0],self.rect.size[1]], width=1)
+            Line(points=[400,0,self.rect.size[0],self.rect.size[1]], width=1)
+            Line(points=[500,0,self.rect.size[0],self.rect.size[1]], width=1)
 
 class canvasTest(App):
     def build(self):
