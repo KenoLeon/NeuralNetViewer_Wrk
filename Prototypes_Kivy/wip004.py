@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-NNV - wip 003 :
+NNV - wip 004 :
 
 - Layout + canvas
 - Increment - Decrement Controls
@@ -50,7 +50,7 @@ class rootCanvas(Widget):
         print('will play_stop')
 
 
-class wip003(App):
+class wip004(App):
 
     gridSize = BoundedNumericProperty(10, min=0, max=20, errorvalue=0)
     rootCanvas = rootCanvas()
@@ -81,4 +81,4 @@ class wip003(App):
 
 
 if __name__ == '__main__':
-    wip003().run()
+    wip004().run()
