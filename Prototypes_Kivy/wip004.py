@@ -43,6 +43,10 @@ class rootCanvas(Widget):
         self.rect.pos = self.pos
         self.rect.size = (self.size[0], self.size[1])
 
+
+
+
+
     def drawGrid(self, *args):
         print('will draw grid')
 

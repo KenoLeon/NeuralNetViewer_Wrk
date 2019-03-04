@@ -2,6 +2,7 @@ BoxLayout:
     id: top_box
     orientation: 'vertical'
     BoxLayout:
+        id: canvas1
         canvas:
             Color:
                 rgb: 0.4, 0.4, 0.4
@@ -28,7 +29,7 @@ BoxLayout:
                 id: button_1
                 background_normal: ''
                 background_color: .2, .2, .2, 1
-                text: 'play/stop'
+                text: 'Play/Stop'
                 color: .6, .6, .6, 1
                 size_hint_x: None
                 size_hint_y: None
@@ -59,6 +60,16 @@ BoxLayout:
                 background_normal: ''
                 background_color: .2, .2, .2, 1
                 text: 'Connect'
+                color: .6, .6, .6, 1
+                size_hint_x: None
+                size_hint_y: None
+                width: 192
+                height: 40
+            Button:
+                id: button_5
+                background_normal: ''
+                background_color: .2, .2, .2, 1
+                text: 'Disconnect'
                 color: .6, .6, .6, 1
                 size_hint_x: None
                 size_hint_y: None
