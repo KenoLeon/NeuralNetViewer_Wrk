@@ -9,6 +9,7 @@ canvas Animation
 
 """
 import os
+from kivy.properties import BoundedNumericProperty
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.graphics import Rectangle
@@ -41,13 +42,25 @@ class rootCanvas(Widget):
         self.rect.size = (self.size[0], self.size[1])
 
     def drawGrid(self, *args):
-        pass
+        print('will draw grid')
 
     def play_stop(self, *args):
         print('will play_stop')
 
 
 class wip003(App):
+
+    gridSize = BoundedNumericProperty(10, min=0, max=20,errorvalue=0)
+    rootCanvas = rootCanvas()
+
+    def updateGrid(self,operation):
+        if operation and self.gridSize<=20:
+            self.gridSize += 1
+        elif self.gridSize >= 0:
+            self.gridSize -= 1
+        self.rootCanvas.drawGrid()
+
+
     def build(self):
         root = BoxLayout()
         sideBar = BoxLayout(
@@ -56,9 +69,10 @@ class wip003(App):
             size_hint=(None, 1),
             width=200,
             spacing=2)
-        widget = rootCanvas()
-        root.add_widget(widget)
-        UI_1 = Builder.load_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'UI_1.kv'))
+        root.add_widget(self.rootCanvas)
+        UI_1 = Builder.load_file(
+            os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), 'UI_1.kv'))
         sideBar.add_widget(UI_1)
         sideBar.add_widget(Widget())
         root.add_widget(sideBar)
@@ -67,43 +81,3 @@ class wip003(App):
 
 if __name__ == '__main__':
     wip003().run()
-
-
-
-
-                    # multi_btn_1 = GridLayout(cols=4)
-        # mb1Label_1 = Label(
-        #     color=(0.6, 0.6, 0.6, 1),
-        #     text='  Grid Size:',
-        #     font_size=14,
-        #     size_hint=(None, None),
-        #     height=40)
-        # btn_1 = Button(
-        #     text='-',
-        #     background_normal='',
-        #     background_color=(.2, .2, .2, 1),
-        #     color=(.6, .6, .6, 1),
-        #     size_hint=(.25, None),
-        #     height=40,
-        #     on_press=widget.play_stop)
-        # mb1Label_2 = Label(
-        #     color=(0.6, 0.6, 0.6, 1),
-        #     text='100',
-        #     font_size=14,
-        #     size_hint=(.25, None),
-        #     height=40,
-        # )
-        # btn_2 = Button(
-        #     text='+',
-        #     background_normal='',
-        #     background_color=(.2, .2, .2, 1),
-        #     color=(.6, .6, .6, 1),
-        #     size_hint=(.25, None),
-        #     height=40,
-        #     on_press=widget.play_stop)
-        # multi_btn_1.add_widget(mb1Label_1)
-        # multi_btn_1.add_widget(btn_1)
-        # multi_btn_1.add_widget(mb1Label_2)
-        # multi_btn_1.add_widget(btn_2)
-        # sideBar.add_widget(multi_btn_1)
-    
