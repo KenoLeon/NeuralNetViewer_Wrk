@@ -34,6 +34,7 @@ Config.set('graphics', 'height', '800')
 GRIDSIZE = 4
 NEURONSIZE = 14
 
+
 class rootCanvas(Widget):
 
     _gridSize = GRIDSIZE
@@ -49,33 +50,56 @@ class rootCanvas(Widget):
     def update_rect(self, *args):
         self.rect.pos = self.pos
         self.rect.size = (self.size[0], self.size[1])
-        self.drawGrid(_gridSize = self._gridSize)
-
+        self.drawGrid(_gridSize=self._gridSize)
 
     def drawGrid(self, **kwargs):
         _gridSize = kwargs.get('_gridSize', GRIDSIZE)
-        if(_gridSize):
+        if (_gridSize):
             self._gridSize = _gridSize
         # ToDo to local vars
-        GRIDWIDTH = self.size[1]
-        GRIDHEIGHT = self.size[1]
-        print(GRIDWIDTH)
-        XMARGIN = (GRIDHEIGHT * 0.06)
-        YMARGIN = (GRIDWIDTH * 0.06)
-        
 
-        STEP = (GRIDWIDTH - (XMARGIN + YMARGIN)) / _gridSize
+        # GRIDWIDTH =  canvas width
+        # GRIDHEIGHT =  canvas heigth
+
+        GRIDWIDTH = self.size[0]
+        GRIDHEIGHT = self.size[1]
+        XMARGIN = 80
+        YMARGIN = 80
+        offsetY = ((GRIDWIDTH-(GRIDHEIGHT-(XMARGIN+YMARGIN)))/2)-YMARGIN
+        print(offsetY)
+
+        STEP = (GRIDHEIGHT - (XMARGIN + YMARGIN)) / _gridSize
         self.canvas.clear()
         with self.canvas:
             Color(0.1, 0.1, 0.1, mode='rgb')
             self.rect = Rectangle(pos=self.pos, size=self.size)
             Color(0.6, 0.6, 0.6, mode='rgb')
             for i in range(_gridSize):
-                Line(points=[XMARGIN, YMARGIN + (i * STEP),(GRIDWIDTH - YMARGIN), XMARGIN + (i * STEP)], width=1)
-                Line(points=[XMARGIN + (i * STEP), YMARGIN,YMARGIN + (i * STEP), GRIDHEIGHT - XMARGIN], width=1)
+                Line(
+                    points=[
+                        XMARGIN + offsetY, YMARGIN + (i * STEP),
+                        (GRIDHEIGHT - YMARGIN)+offsetY,XMARGIN + (i * STEP)
+                    ],
+                    width=1)
+                Line(
+                    points=[
+                        XMARGIN + (i * STEP) + offsetY, YMARGIN, YMARGIN + (i * STEP) + offsetY,
+                        GRIDHEIGHT - XMARGIN
+                    ],
+                    width=1)
             if i == (_gridSize - 1):
-                Line(points=[XMARGIN, YMARGIN + ((i + 1) * STEP),(GRIDWIDTH - YMARGIN), XMARGIN + ((i + 1) * STEP)], width=1)
-                Line(points=[XMARGIN + ((i + 1) * STEP), YMARGIN,YMARGIN + ((i + 1) * STEP), GRIDHEIGHT - XMARGIN], width=1)
+                Line(
+                    points=[
+                        XMARGIN + offsetY, YMARGIN + ((i + 1) * STEP),
+                        (GRIDHEIGHT - YMARGIN) + offsetY, XMARGIN + ((i + 1) * STEP)
+                    ],
+                    width=1)
+                Line(
+                    points=[
+                        XMARGIN + ((i + 1) * STEP) + offsetY, YMARGIN,
+                        YMARGIN + ((i + 1) * STEP) + offsetY, GRIDHEIGHT - XMARGIN
+                    ],
+                    width=1)
 
     def play_stop(self, *args):
         print('will play_stop')
@@ -91,7 +115,7 @@ class wip004(App):
             self.gridSize += 1
         elif self.gridSize >= 0:
             self.gridSize -= 1
-        self.rootCanvas.drawGrid(_gridSize = self.gridSize)
+        self.rootCanvas.drawGrid(_gridSize=self.gridSize)
 
     def build(self):
         root = BoxLayout()
