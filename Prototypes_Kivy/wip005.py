@@ -1,9 +1,19 @@
 #!/usr/bin/env python
 """
-NNV - wip 004 :
+NNV - wip 005 :
 
+HAS:
 - Layout + canvas
 - Increment - Decrement Controls
+
+NEEDS:
+- PLACE NEURON
+- PLAY  NEURON
+
+To Do:
+
+canvas Animation/Loop
+
 
 """
 import os
