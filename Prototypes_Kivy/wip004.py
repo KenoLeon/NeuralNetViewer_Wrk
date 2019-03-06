@@ -65,7 +65,8 @@ class rootCanvas(Widget):
         GRIDHEIGHT = self.size[1]
         XMARGIN = 80
         YMARGIN = 80
-        offsetY = ((GRIDWIDTH-(GRIDHEIGHT-(XMARGIN+YMARGIN)))/2)-YMARGIN
+        offsetY = (
+            (GRIDWIDTH - (GRIDHEIGHT - (XMARGIN + YMARGIN))) / 2) - YMARGIN
         print(offsetY)
 
         STEP = (GRIDHEIGHT - (XMARGIN + YMARGIN)) / _gridSize
@@ -78,26 +79,28 @@ class rootCanvas(Widget):
                 Line(
                     points=[
                         XMARGIN + offsetY, YMARGIN + (i * STEP),
-                        (GRIDHEIGHT - YMARGIN)+offsetY,XMARGIN + (i * STEP)
+                        (GRIDHEIGHT - YMARGIN) + offsetY, XMARGIN + (i * STEP)
                     ],
                     width=1)
                 Line(
                     points=[
-                        XMARGIN + (i * STEP) + offsetY, YMARGIN, YMARGIN + (i * STEP) + offsetY,
-                        GRIDHEIGHT - XMARGIN
+                        XMARGIN + (i * STEP) + offsetY, YMARGIN,
+                        YMARGIN + (i * STEP) + offsetY, GRIDHEIGHT - XMARGIN
                     ],
                     width=1)
             if i == (_gridSize - 1):
                 Line(
                     points=[
                         XMARGIN + offsetY, YMARGIN + ((i + 1) * STEP),
-                        (GRIDHEIGHT - YMARGIN) + offsetY, XMARGIN + ((i + 1) * STEP)
+                        (GRIDHEIGHT - YMARGIN) + offsetY,
+                        XMARGIN + ((i + 1) * STEP)
                     ],
                     width=1)
                 Line(
                     points=[
                         XMARGIN + ((i + 1) * STEP) + offsetY, YMARGIN,
-                        YMARGIN + ((i + 1) * STEP) + offsetY, GRIDHEIGHT - XMARGIN
+                        YMARGIN + ((i + 1) * STEP) + offsetY,
+                        GRIDHEIGHT - XMARGIN
                     ],
                     width=1)
 
