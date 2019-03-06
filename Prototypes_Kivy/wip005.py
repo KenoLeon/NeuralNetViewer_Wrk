@@ -12,7 +12,10 @@ NEEDS:
 
 To Do:
 
-canvas Animation/Loop
+canvas Animation/Loop:
+
+Explore animations
+Explore sprites
 
 
 """
