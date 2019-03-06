@@ -15,7 +15,7 @@ from kivy.properties import BoundedNumericProperty
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.graphics import Rectangle
-from kivy.graphics import Color
+from kivy.graphics import Color, Line
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -29,8 +29,15 @@ from random import random as r
 Config.set('graphics', 'width', '1200')
 Config.set('graphics', 'height', '800')
 
+# VARS :
+
+GRIDSIZE = 4
+NEURONSIZE = 14
 
 class rootCanvas(Widget):
+
+    _gridSize = GRIDSIZE
+
     def __init__(self, **kwargs):
         super(rootCanvas, self).__init__(**kwargs)
         with self.canvas:
@@ -42,13 +49,33 @@ class rootCanvas(Widget):
     def update_rect(self, *args):
         self.rect.pos = self.pos
         self.rect.size = (self.size[0], self.size[1])
+        self.drawGrid(_gridSize = self._gridSize)
 
 
+    def drawGrid(self, **kwargs):
+        _gridSize = kwargs.get('_gridSize', GRIDSIZE)
+        if(_gridSize):
+            self._gridSize = _gridSize
+        # ToDo to local vars
+        GRIDWIDTH = self.size[1]
+        GRIDHEIGHT = self.size[1]
+        print(GRIDWIDTH)
+        XMARGIN = (GRIDHEIGHT * 0.06)
+        YMARGIN = (GRIDWIDTH * 0.06)
+        
 
-
-
-    def drawGrid(self, *args):
-        print('will draw grid')
+        STEP = (GRIDWIDTH - (XMARGIN + YMARGIN)) / _gridSize
+        self.canvas.clear()
+        with self.canvas:
+            Color(0.1, 0.1, 0.1, mode='rgb')
+            self.rect = Rectangle(pos=self.pos, size=self.size)
+            Color(0.6, 0.6, 0.6, mode='rgb')
+            for i in range(_gridSize):
+                Line(points=[XMARGIN, YMARGIN + (i * STEP),(GRIDWIDTH - YMARGIN), XMARGIN + (i * STEP)], width=1)
+                Line(points=[XMARGIN + (i * STEP), YMARGIN,YMARGIN + (i * STEP), GRIDHEIGHT - XMARGIN], width=1)
+            if i == (_gridSize - 1):
+                Line(points=[XMARGIN, YMARGIN + ((i + 1) * STEP),(GRIDWIDTH - YMARGIN), XMARGIN + ((i + 1) * STEP)], width=1)
+                Line(points=[XMARGIN + ((i + 1) * STEP), YMARGIN,YMARGIN + ((i + 1) * STEP), GRIDHEIGHT - XMARGIN], width=1)
 
     def play_stop(self, *args):
         print('will play_stop')
@@ -56,7 +83,7 @@ class rootCanvas(Widget):
 
 class wip004(App):
 
-    gridSize = BoundedNumericProperty(10, min=0, max=20, errorvalue=0)
+    gridSize = BoundedNumericProperty(GRIDSIZE, min=1, max=20, errorvalue=1)
     rootCanvas = rootCanvas()
 
     def updateGrid(self, operation):
@@ -64,7 +91,7 @@ class wip004(App):
             self.gridSize += 1
         elif self.gridSize >= 0:
             self.gridSize -= 1
-        self.rootCanvas.drawGrid()
+        self.rootCanvas.drawGrid(_gridSize = self.gridSize)
 
     def build(self):
         root = BoxLayout()

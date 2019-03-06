@@ -41,8 +41,6 @@ class rootCanvas(Widget):
             Line(points=[0,0,self.rect.size[0],self.rect.size[1]], width=1)
 
 
-
-
 class canvasTest(App):
     def build(self):
         root = BoxLayout()
