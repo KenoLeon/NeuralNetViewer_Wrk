@@ -7,12 +7,14 @@ HAS:
 - Increment - Decrement Controls
 
 NEEDS:
+
 - PLACE NEURON
 - PLAY  NEURON
 
 To Do:
 
 canvas Animation/Loop:
+Paceholder neurons
 
 Explore animations
 Explore sprites
