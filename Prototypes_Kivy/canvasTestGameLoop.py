@@ -34,7 +34,6 @@ class rootCanvas(Widget):
 
     def move(self, *args):
         self.animRect.pos = Vector(1,1) + self.animRect.pos
-        print(self.animRect.pos)
 
     def start(self, *args):
         self.event = Clock.schedule_interval(self.move, 1.0 / 60.0)

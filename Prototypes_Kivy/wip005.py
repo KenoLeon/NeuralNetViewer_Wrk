@@ -13,10 +13,12 @@ NEEDS:
 
 To Do:
 
+Fix grid size number xxx
+
 canvas Animation/Loop:
 Paceholder neurons
 
-Explore animations
+Explore animations xxx
 Explore sprites
 
 
@@ -40,23 +42,37 @@ from random import random as r
 Config.set('graphics', 'width', '1200')
 Config.set('graphics', 'height', '800')
 
-# VARS :
+#DEFAULT VARS :
 
 GRIDSIZE = 4
 NEURONSIZE = 14
 
 
-class rootCanvas(Widget):
+class neuron(Widget):
+    def __init__(self, **kwargs):
+        with self.canvas:
+            Color(0.1, 1, 0.1, mode='rgb')
+            self.rect = Rectangle(pos=self.pos, size=self.size)
+
+
+class gridCanvas(Widget):
 
     _gridSize = GRIDSIZE
 
     def __init__(self, **kwargs):
-        super(rootCanvas, self).__init__(**kwargs)
+        super(gridCanvas, self).__init__(**kwargs)
         with self.canvas:
             Color(0.1, 0.1, 0.1, mode='rgb')
             self.rect = Rectangle(pos=self.pos, size=self.size)
         self.bind(pos=self.update_rect)
         self.bind(size=self.update_rect)
+
+    def addNeuron(self, *args):
+        with self.canvas:
+            Color(1, 0, 1, mode='rgb')
+            Rectangle(
+                pos=(r() * self.width + self.x, r() * self.height + self.y),
+                size=(20, 20))
 
     def update_rect(self, *args):
         self.rect.pos = self.pos
@@ -114,22 +130,20 @@ class rootCanvas(Widget):
                         GRIDHEIGHT - XMARGIN
                     ],
                     width=1)
-
-    def play_stop(self, *args):
-        print('will play_stop')
+            self.addNeuron()
 
 
-class wip004(App):
+class wip005(App):
 
-    gridSize = BoundedNumericProperty(GRIDSIZE, min=1, max=20, errorvalue=1)
-    rootCanvas = rootCanvas()
+    gridSize = BoundedNumericProperty(GRIDSIZE, min=2, max=20, errorvalue=2)
+    gridCanvas = gridCanvas()
 
     def updateGrid(self, operation):
         if operation and self.gridSize <= 20:
             self.gridSize += 1
         elif self.gridSize >= 0:
             self.gridSize -= 1
-        self.rootCanvas.drawGrid(_gridSize=self.gridSize)
+        self.gridCanvas.drawGrid(_gridSize=self.gridSize - 1)
 
     def build(self):
         root = BoxLayout()
@@ -139,7 +153,7 @@ class wip004(App):
             size_hint=(None, 1),
             width=200,
             spacing=2)
-        root.add_widget(self.rootCanvas)
+        root.add_widget(self.gridCanvas)
         UI_1 = Builder.load_file(
             os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), 'UI_1.kv'))
@@ -150,4 +164,4 @@ class wip004(App):
 
 
 if __name__ == '__main__':
-    wip004().run()
+    wip005().run()
