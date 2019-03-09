@@ -9,12 +9,9 @@ HAS:
 - Circle/Full Circle Examples
 
 NEEDS:
-
-- PLACE NEURON
-- PLAY  NEURON
+- PLACE OBJECT WIDGET NEURONS
 
 To Do:
-
 - App architecure, where to add neurons.
 - Paceholder neurons
 
@@ -139,7 +136,7 @@ class wip005(App):
         self.gridCanvas.drawGrid(_gridSize=self.gridSize - 1)
 
     def initNeurons(self):
-        pass
+        print('will init neurons')
 
     # From NMV:
     # def initNeurons():
@@ -164,7 +161,7 @@ class wip005(App):
         sideBar.add_widget(UI_1)
         sideBar.add_widget(Widget())
         root.add_widget(sideBar)
-        # self.addNeurons()
+        self.initNeurons()
         return root
 
 
