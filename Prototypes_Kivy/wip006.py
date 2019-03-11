@@ -16,6 +16,8 @@ To Do:
 - Paceholder neurons
 
 """
+
+
 import os
 from kivy.properties import BoundedNumericProperty
 from kivy.app import App
@@ -26,10 +28,13 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.config import Config
 from random import random as r
+from kivy.uix.behaviors import ButtonBehavior
+
 
 # Window :
 Config.set('graphics', 'width', '1200')
@@ -39,32 +44,47 @@ Config.set('graphics', 'height', '800')
 
 GRIDSIZE = 4
 NEURONSIZE = 14
+XMARGIN = 60
+YMARGIN = 60
 
-
-class neuron(Widget):
+class neuron(ButtonBehavior,Widget):
     def __init__(self, **kwargs):
+        super(neuron, self).__init__(**kwargs)
         with self.canvas:
-            Color(0.1, 1, 0.1, mode='rgb')
-            self.rect = Rectangle(pos=self.pos, size=self.size)
+            Color(1, 0.1, 0.1, mode='rgb')
+            Ellipse(pos=(XMARGIN, YMARGIN), size=(NEURONSIZE, NEURONSIZE))
+    def on_press(self):
+        with self.canvas:
+            Color(0.4, 0.4, 0.4, mode='rgb')
+            Ellipse(pos=(XMARGIN, YMARGIN), size=(NEURONSIZE, NEURONSIZE))
 
-class gridCanvas(Widget):
+            # Line(ellipse=(0, 0, 150, 150))
+        # self.rect = Rectangle(pos=self.pos, size=self.size)
+        # self.bind(pos=self.update_rect)
+        # self.bind(size=self.update_rect)
+
+    # def update_rect(self, *args):
+    #     self.rect.pos = self.pos
+    #     self.rect.size = (self.size[0], self.size[1])
+    #     self.draw()
+    #
+    # def draw(self, **kwargs):
+    #     with self.canvas:
+    #         Color(0.5, 0.5, 0.5, mode='rgb')
+
+
+
+class grid(FloatLayout):
 
     _gridSize = GRIDSIZE
 
     def __init__(self, **kwargs):
-        super(gridCanvas, self).__init__(**kwargs)
+        super(grid, self).__init__(**kwargs)
         with self.canvas:
             Color(0.1, 0.1, 0.1, mode='rgb')
-            self.rect = Rectangle(pos=self.pos, size=self.size)
+        self.rect = Rectangle(pos=self.pos, size=self.size)
         self.bind(pos=self.update_rect)
         self.bind(size=self.update_rect)
-
-    def addNeuron(self, *args):
-        with self.canvas:
-            Color(0.5, 0.5, 0.5, mode='rgb')
-
-            Line(ellipse=(0, 0, 150, 150))
-            Ellipse(self.pos,20,20)
 
     def update_rect(self, *args):
         self.rect.pos = self.pos
@@ -75,15 +95,8 @@ class gridCanvas(Widget):
         _gridSize = kwargs.get('_gridSize', GRIDSIZE)
         if (_gridSize):
             self._gridSize = _gridSize
-        # ToDo to local vars
-
-        # GRIDWIDTH =  canvas width
-        # GRIDHEIGHT =  canvas heigth
-
         GRIDWIDTH = self.size[0]
         GRIDHEIGHT = self.size[1]
-        XMARGIN = 60
-        YMARGIN = 60
         offsetY = (
             (GRIDWIDTH - (GRIDHEIGHT - (XMARGIN + YMARGIN))) / 2) - YMARGIN
         STEP = (GRIDHEIGHT - (XMARGIN + YMARGIN)) / _gridSize
@@ -120,23 +133,24 @@ class gridCanvas(Widget):
                         GRIDHEIGHT - XMARGIN
                     ],
                     width=1)
-            self.addNeuron()
 
 
 class wip005(App):
 
     gridSize = BoundedNumericProperty(GRIDSIZE, min=2, max=20, errorvalue=2)
-    gridCanvas = gridCanvas()
+    grid = grid()
+    neuronLayer = FloatLayout()
 
     def updateGrid(self, operation):
         if operation and self.gridSize <= 20:
             self.gridSize += 1
         elif self.gridSize >= 0:
             self.gridSize -= 1
-        self.gridCanvas.drawGrid(_gridSize=self.gridSize - 1)
+        self.grid.drawGrid(_gridSize=self.gridSize - 1)
 
     def initNeurons(self):
-        print('will init neurons')
+        n = neuron()
+        self.neuronLayer.add_widget(n)
 
     # From NMV:
     # def initNeurons():
@@ -145,21 +159,23 @@ class wip005(App):
     #             n = Neuron(int(XMARGIN + (i * STEP)), int((YMARGIN) + (ii * STEP)))
     #             NEURON_LIST.append(n)
 
-
     def build(self):
-        root = BoxLayout()
+        root = FloatLayout()
         sideBar = BoxLayout(
             padding=4,
             orientation='vertical',
             size_hint=(None, 1),
             width=200,
-            spacing=2)
-        root.add_widget(self.gridCanvas)
+            spacing=2,
+            pos_hint={'x':0.83, 'y':0})
+
         UI_1 = Builder.load_file(
             os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), 'UI_1.kv'))
-        sideBar.add_widget(UI_1)
+        sideBar.add_widget(UI_1)        
         sideBar.add_widget(Widget())
+        root.add_widget(self.grid)
+        root.add_widget(self.neuronLayer)
         root.add_widget(sideBar)
         self.initNeurons()
         return root

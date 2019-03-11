@@ -16,7 +16,7 @@ from functools import partial
 
 class FocusButton(FocusBehavior, Button):
       pass
-      
+
 class objectBehaviorApp(App):
 
     def build(self):
