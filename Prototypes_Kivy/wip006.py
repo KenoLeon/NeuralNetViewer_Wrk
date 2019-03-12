@@ -14,7 +14,6 @@ NEEDS:
 To Do:
 - App architecure, where to add neurons.
 - Paceholder neurons
-
 """
 
 
@@ -172,7 +171,7 @@ class wip005(App):
         UI_1 = Builder.load_file(
             os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), 'UI_1.kv'))
-        sideBar.add_widget(UI_1)        
+        sideBar.add_widget(UI_1)
         sideBar.add_widget(Widget())
         root.add_widget(self.grid)
         root.add_widget(self.neuronLayer)
