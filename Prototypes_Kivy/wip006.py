@@ -158,6 +158,7 @@ class wip005(App):
     #             n = Neuron(int(XMARGIN + (i * STEP)), int((YMARGIN) + (ii * STEP)))
     #             NEURON_LIST.append(n)
 
+
     def build(self):
         root = FloatLayout()
         sideBar = BoxLayout(
