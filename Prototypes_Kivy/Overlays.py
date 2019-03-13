@@ -7,7 +7,6 @@ from kivy.metrics import dp
 
 Window.clearcolor = (1, 1, 1, 1)
 
-
 class Overlays(Screen):
 
     def __init__(self, **kwargs):
