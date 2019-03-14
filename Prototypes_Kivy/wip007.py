@@ -28,16 +28,20 @@ NEURONSIZE = 14
 XMARGIN = 60
 YMARGIN = 60
 
+
+# TODO: Debug gridSize
+
+
 class gridWidget(BoxLayout):
 
     def __init__(self, *args, **kwargs):
         BoxLayout.__init__(self, *args, **kwargs)
         self.bind(pos=self.draw)
         self.bind(size=self.draw)
-        self.gridlayout = BoxLayout(opacity=1)
-        # self.layout2 = BoxLayout()
-        self.add_widget(self.gridlayout)
-        # self.add_widget(self.layout2)
+        self.gridLayer = BoxLayout(opacity=1)
+        self.neuronLayer = BoxLayout()
+        self.add_widget(self.gridLayer)
+        self.add_widget(self.neuronLayer)
 
     def draw(self, *args, **kwargs):
         _gridSize = kwargs.get('_gridSize', GRIDSIZE)
@@ -53,8 +57,9 @@ class gridWidget(BoxLayout):
         with self.canvas.before:
             Color(0.1, 0.1, 0.1, mode='rgb')
             self.bg = Rectangle(pos=self.pos, size=self.size)
-        self.gridlayout.canvas.clear()
-        with self.gridlayout.canvas:
+        # GRID:
+        self.gridLayer.canvas.clear()
+        with self.gridLayer.canvas:
             Color(0.6, 0.6, 0.6, mode='rgb')
             for i in range(_gridSize):
                 Line(
@@ -84,6 +89,15 @@ class gridWidget(BoxLayout):
                         GRIDHEIGHT - XMARGIN
                     ],
                     width=1)
+        # NEURONS:
+        self.neuronLayer.canvas.clear()
+        with self.neuronLayer.canvas:
+            Color(0.1, 0.5, 0.5, mode='rgb')
+            for i in range(_gridSize + 1):
+                for ii in range(_gridSize + 1):
+                    Ellipse(pos=(int(XMARGIN + (i * STEP)), int((YMARGIN) + (ii * STEP))), size=(NEURONSIZE, NEURONSIZE))
+
+
 
 class wip007(App):
 
