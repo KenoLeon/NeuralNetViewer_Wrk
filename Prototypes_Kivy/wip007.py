@@ -6,6 +6,7 @@ Grid as root for neuron widgets
 """
 
 import os
+import math
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
@@ -18,19 +19,17 @@ from kivy.uix.widget import Widget
 from kivy.config import Config
 
 
+
 # Window :
 Config.set('graphics', 'width', '1200')
 Config.set('graphics', 'height', '800')
 
 #DEFAULT VARS :
 GRIDSIZE = 4
-NEURONSIZE = 14
 XMARGIN = 60
 YMARGIN = 60
 
-
 # TODO: Debug gridSize
-
 
 class gridWidget(BoxLayout):
 
@@ -47,6 +46,10 @@ class gridWidget(BoxLayout):
         _gridSize = kwargs.get('_gridSize', GRIDSIZE)
         if (_gridSize):
             self._gridSize = _gridSize
+        if float(math.log(_gridSize)) > 0:
+            NEURONSIZE = 1/float(math.log(_gridSize))*40
+        else:
+            NEURONSIZE = 60
 
         GRIDWIDTH = self.size[0]
         GRIDHEIGHT = self.size[1]
@@ -92,10 +95,10 @@ class gridWidget(BoxLayout):
         # NEURONS:
         self.neuronLayer.canvas.clear()
         with self.neuronLayer.canvas:
-            Color(0.1, 0.5, 0.5, mode='rgb')
+            Color(0.1, 0.1, 0.1, mode='rgb')
             for i in range(_gridSize + 1):
                 for ii in range(_gridSize + 1):
-                    Ellipse(pos=(int(XMARGIN + (i * STEP)), int((YMARGIN) + (ii * STEP))), size=(NEURONSIZE, NEURONSIZE))
+                    Ellipse(pos=(int(XMARGIN + (i * STEP) + offsetY - NEURONSIZE/2), int((YMARGIN) + (ii * STEP)) - NEURONSIZE/2), size=(NEURONSIZE, NEURONSIZE))
 
 
 
