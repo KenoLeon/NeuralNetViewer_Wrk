@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 """
 NNV - wip 007, slightly Different Architecture:
-Grid as root for neuron widgets
-
+Grid as root for neuron widgets, placeholder neurons.
 """
 
 import os
@@ -18,21 +17,16 @@ from kivy.properties import BoundedNumericProperty
 from kivy.uix.widget import Widget
 from kivy.config import Config
 
-
-
 # Window :
 Config.set('graphics', 'width', '1200')
 Config.set('graphics', 'height', '800')
 
 #DEFAULT VARS :
-GRIDSIZE = 4
 XMARGIN = 60
 YMARGIN = 60
 
-# TODO: Debug gridSize
 
 class gridWidget(BoxLayout):
-
     def __init__(self, *args, **kwargs):
         BoxLayout.__init__(self, *args, **kwargs)
         self.bind(pos=self.draw)
@@ -41,16 +35,18 @@ class gridWidget(BoxLayout):
         self.neuronLayer = BoxLayout()
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
+        self._gridSize = 4
 
     def draw(self, *args, **kwargs):
-        _gridSize = kwargs.get('_gridSize', GRIDSIZE)
+        # method vars :
+        _gridSize = kwargs.get('_gridSize', self._gridSize)
         if (_gridSize):
             self._gridSize = _gridSize
+
         if float(math.log(_gridSize)) > 0:
-            NEURONSIZE = 1/float(math.log(_gridSize))*40
+            NEURONSIZE = 1 / float(math.log(_gridSize)) * 40
         else:
             NEURONSIZE = 60
-
         GRIDWIDTH = self.size[0]
         GRIDHEIGHT = self.size[1]
         offsetY = (
@@ -98,16 +94,20 @@ class gridWidget(BoxLayout):
             Color(0.1, 0.1, 0.1, mode='rgb')
             for i in range(_gridSize + 1):
                 for ii in range(_gridSize + 1):
-                    Ellipse(pos=(int(XMARGIN + (i * STEP) + offsetY - NEURONSIZE/2), int((YMARGIN) + (ii * STEP)) - NEURONSIZE/2), size=(NEURONSIZE, NEURONSIZE))
-
+                    Ellipse(
+                        pos=(int(XMARGIN + (i * STEP) +
+                                 offsetY - NEURONSIZE / 2),
+                             int((YMARGIN) + (ii * STEP)) - NEURONSIZE / 2),
+                        size=(NEURONSIZE, NEURONSIZE))
 
 
 class wip007(App):
 
     # class vars:
     title = "NNV - wip007"
-    gridSize = BoundedNumericProperty(GRIDSIZE, min=2, max=20, errorvalue=2)
     grid = gridWidget()
+    gridSize = BoundedNumericProperty(
+        grid._gridSize + 1, min=2, max=20, errorvalue=2)
 
     # class Methods:
     def updateGrid(self, operation):
@@ -116,7 +116,6 @@ class wip007(App):
         elif self.gridSize >= 0:
             self.gridSize -= 1
         self.grid.draw(_gridSize=self.gridSize - 1)
-
 
     def build(self):
         root = BoxLayout()
