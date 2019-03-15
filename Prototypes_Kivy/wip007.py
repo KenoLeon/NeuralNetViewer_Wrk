@@ -117,6 +117,7 @@ class wip007(App):
             self.gridSize -= 1
         self.grid.draw(_gridSize=self.gridSize - 1)
 
+    # THe Big enchilada :
     def build(self):
         root = BoxLayout()
         sideBar = BoxLayout(
