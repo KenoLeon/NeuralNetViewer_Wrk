@@ -33,7 +33,7 @@ NEURON_LIST = []
 TODO:
 PLACE NEURONS:
 
-- Neuron as Object
+- Neuron as Object...
 - Hover click/focus
 - Place.
 
@@ -41,43 +41,15 @@ PLACE NEURONS:
 
 '''
 
-# https://kivy.org/doc/stable/api-kivy.uix.behaviors.button.html
 
-class Neuron(FocusBehavior, Button):
-    def __init__(self, **kwargs):
-        super(Neuron, self).__init__(**kwargs)
-        self.size_hint = (None, None)
-        self.size  =20,20
-        print (self.size)
-        self.pos = [100,100]
-        print (self.pos)
-        # self.size = (40,40)
-        with self.canvas:
-            Color(0.1, 0.1, 1, mode='rgb')
-            self.bg = Rectangle(pos=self.pos, size=self.size)
-
-
-        # self.source = 'atlas://data/images/defaulttheme/checkbox_off'
-
-    # def on_press(self):
-    #     pass
-    #     # self.source = 'atlas://data/images/defaulttheme/checkbox_on'
-    #
-    # def on_release(self):
-    #     pass
-    #     # self.source = 'atlas://data/images/defaulttheme/checkbox_off'
-
-    # TODO:
-    # Self.place
-
-    # def __init__(self, x, y):
-    #     self.x = x
-    #     self.y = y
-    #     self.place = False
-    #     self._rect = self.draw()
-    #     self.ntLevel = 0.4
-    #     self.ntRelease = 0.1
-
+class Neuron(Widget):
+        def __init__(self, **kwargs):
+            _pos = kwargs.get('_pos')
+            _size = kwargs.get('_size')
+            super(Neuron, self).__init__()
+            with self.canvas:
+                Color(0.1, 0.1, 1, mode='rgb')
+                self.bg = Ellipse(pos = _pos, size=_size)
 
 class gridWidget(FloatLayout):
     def __init__(self, *args, **kwargs):
@@ -89,12 +61,26 @@ class gridWidget(FloatLayout):
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
         self._gridSize = 4
-        self.initNeurons()
 
 
     def initNeurons(self, *args, **kwargs):
-        n = Neuron()
-        self.neuronLayer.add_widget(n)
+        # print(self._gridSize)
+        if float(math.log(self._gridSize)) > 0:
+            NEURONSIZE = 1 / float(math.log(self._gridSize)) * 40
+        else:
+            NEURONSIZE = 60
+        GRIDWIDTH = self.size[0]
+        GRIDHEIGHT = self.size[1]
+        offsetY = (
+            (GRIDWIDTH - (GRIDHEIGHT - (XMARGIN + YMARGIN))) / 2) - YMARGIN
+        STEP = (GRIDHEIGHT - (XMARGIN + YMARGIN)) / self._gridSize
+
+        for i in range(self._gridSize + 1):
+            for ii in range(self._gridSize + 1):
+                n = Neuron(_pos=(int(XMARGIN + (i * STEP) +
+                         offsetY - NEURONSIZE / 2),
+                     int((YMARGIN) + (ii * STEP)) - NEURONSIZE / 2),_size=(NEURONSIZE,NEURONSIZE))
+                self.neuronLayer.add_widget(n)
 
 
     def draw(self, *args, **kwargs):
@@ -148,17 +134,10 @@ class gridWidget(FloatLayout):
                         GRIDHEIGHT - XMARGIN
                     ],
                     width=1)
-        # NEURONS:
-        # self.neuronLayer.canvas.clear()
-        # with self.neuronLayer.canvas:
-        #     Color(0.1, 0.1, 0.1, mode='rgb')
-        #     for i in range(_gridSize + 1):
-        #         for ii in range(_gridSize + 1):
-        #             Ellipse(
-        #                 pos=(int(XMARGIN + (i * STEP) +
-        #                          offsetY - NEURONSIZE / 2),
-        #                      int((YMARGIN) + (ii * STEP)) - NEURONSIZE / 2),
-        #                 size=(NEURONSIZE, NEURONSIZE))
+            # OPTIONS:
+            # REMOVE WIDGETS  RE INIT
+            # IF INIT AND NOT GRID CHANGE, just reposition neurons
+            self.initNeurons()
 
 
 class wip007(App):
