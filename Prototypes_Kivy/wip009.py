@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
-NNV - wip 008:
+NNV - wip 009:
+
 """
 
 import os
@@ -48,23 +49,24 @@ class Neuron(Widget):
             _size = kwargs.get('_size')
             super(Neuron, self).__init__()
             with self.canvas:
-                Color(0.1, 0.1, 1, mode='rgb')
+                Color(1, 0.54, 0.0, mode='rgb')
                 self.bg = Ellipse(pos = _pos, size=_size)
 
-class gridWidget(FloatLayout):
+
+class gridNeuronsWidget(FloatLayout):
     def __init__(self, *args, **kwargs):
         FloatLayout.__init__(self, *args, **kwargs)
         self.bind(pos=self.draw)
         self.bind(size=self.draw)
         self.gridLayer = BoxLayout(opacity=1)
-        self.neuronLayer = BoxLayout()
+        self.neuronLayer = BoxLayout(opacity=1)
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
         self._gridSize = 4
+        self.neuronsInitialized = False
 
 
     def initNeurons(self, *args, **kwargs):
-        # print(self._gridSize)
         if float(math.log(self._gridSize)) > 0:
             NEURONSIZE = 1 / float(math.log(self._gridSize)) * 40
         else:
@@ -80,7 +82,14 @@ class gridWidget(FloatLayout):
                 n = Neuron(_pos=(int(XMARGIN + (i * STEP) +
                          offsetY - NEURONSIZE / 2),
                      int((YMARGIN) + (ii * STEP)) - NEURONSIZE / 2),_size=(NEURONSIZE,NEURONSIZE))
+                NEURON_LIST.append(n)
                 self.neuronLayer.add_widget(n)
+        self.neuronsInitialized = True
+
+
+    def updateNeuronPos(self, *args, **kwargs):
+        for neuron in NEURON_LIST:
+            print('will repositon neurons')
 
 
     def draw(self, *args, **kwargs):
@@ -135,6 +144,11 @@ class gridWidget(FloatLayout):
                     ],
                     width=1)
 
+        if not self.neuronsInitialized:
+            self.initNeurons()
+        else:
+            self.updateNeuronPos()
+
 
             # Logic:
             # If INIT and not grid change,reposition neurons.
@@ -146,14 +160,12 @@ class gridWidget(FloatLayout):
             # Alternative 2:
             # Decouple grid and Neurons
 
-            self.initNeurons()
 
-
-class wip007(App):
+class wip009(App):
 
     # class vars:
     title = "NNV - wip007"
-    grid = gridWidget()
+    grid = gridNeuronsWidget()
     gridSize = BoundedNumericProperty(
         grid._gridSize + 1, min=2, max=20, errorvalue=2)
 
@@ -186,4 +198,4 @@ class wip007(App):
 
 
 if __name__ == "__main__":
-    wip007().run()
+    wip009().run()
