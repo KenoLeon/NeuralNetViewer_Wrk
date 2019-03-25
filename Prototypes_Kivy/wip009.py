@@ -50,11 +50,8 @@ class Neuron(Widget):
             self._pos = _pos
             _size = kwargs.get('_size')
             super(Neuron, self).__init__()
-            with self.canvas.before:
-                Color(1, 0.1, 0.1, mode='rgb')
-                self.bg = Rectangle(pos=self.pos, size=self.size)
             with self.canvas:
-                Color(1, 0.54, 0.0, mode='rgb')
+                Color(0.1, 0.1, 0.1, mode='rgb')
                 self.bg = Ellipse(pos = _pos, size=_size)
 
 
@@ -64,12 +61,11 @@ class gridNeuronsWidget(RelativeLayout):
         self.bind(pos=self.draw)
         self.bind(size=self.draw)
         self.gridLayer = BoxLayout(opacity=1)
-        self.neuronLayer = FloatLayout(opacity=0.2)
+        self.neuronLayer = FloatLayout(opacity=1)
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
         self._gridSize = 4
         self.neuronsInitialized = False
-
 
 
     def initNeurons(self, *args, **kwargs):
@@ -94,19 +90,10 @@ class gridNeuronsWidget(RelativeLayout):
 
 
     def updateNeuronPos(self, *args, **kwargs):
-        pass
-        # for neuron in NEURON_LIST:
-        #     neuron.pos = neuron.pos + 10
-
-        # pass
-        # print ('sizes')
-        # print ('self.neuronLayer.size')
-        # print (self.neuronLayer.size)
-        # print ('self.neuronLayer.parent.size')
-        # print (self.neuronLayer.parent.size)
-        # print ('self.size')
-        # print (self.size)
-
+        # Note: Ideally neuron pos needs to be binded to neuronLayer
+        for neuron in NEURON_LIST:
+            self.neuronLayer.remove_widget(neuron)
+        self.initNeurons()
 
     def draw(self, *args, **kwargs):
         # method vars :
@@ -164,19 +151,6 @@ class gridNeuronsWidget(RelativeLayout):
             self.initNeurons()
         else:
             self.updateNeuronPos()
-
-
-            # Alternative:
-
-            # Logic:
-            # If INIT and not grid change,reposition neurons.
-            # If Change Grid Size, remove neurons, deal with init.
-
-            # Alternative 1 :
-            # REMOVE WIDGETS  RE INIT
-
-            # Alternative 2:
-            # Decouple grid and Neurons
 
 
 class wip009(App):
