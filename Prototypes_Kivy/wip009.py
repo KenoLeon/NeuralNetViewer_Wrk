@@ -11,6 +11,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.graphics import Color, Line, Ellipse, Rectangle
 from kivy.uix.button import Button
 from kivy.metrics import dp
@@ -46,24 +47,29 @@ PLACE NEURONS:
 class Neuron(Widget):
         def __init__(self, **kwargs):
             _pos = kwargs.get('_pos')
+            self._pos = _pos
             _size = kwargs.get('_size')
             super(Neuron, self).__init__()
+            with self.canvas.before:
+                Color(1, 0.1, 0.1, mode='rgb')
+                self.bg = Rectangle(pos=self.pos, size=self.size)
             with self.canvas:
                 Color(1, 0.54, 0.0, mode='rgb')
                 self.bg = Ellipse(pos = _pos, size=_size)
 
 
-class gridNeuronsWidget(FloatLayout):
+class gridNeuronsWidget(RelativeLayout):
     def __init__(self, *args, **kwargs):
         FloatLayout.__init__(self, *args, **kwargs)
         self.bind(pos=self.draw)
         self.bind(size=self.draw)
         self.gridLayer = BoxLayout(opacity=1)
-        self.neuronLayer = BoxLayout(opacity=1)
+        self.neuronLayer = FloatLayout(opacity=0.2)
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
         self._gridSize = 4
         self.neuronsInitialized = False
+
 
 
     def initNeurons(self, *args, **kwargs):
@@ -88,8 +94,18 @@ class gridNeuronsWidget(FloatLayout):
 
 
     def updateNeuronPos(self, *args, **kwargs):
-        for neuron in NEURON_LIST:
-            print('will repositon neurons')
+        pass
+        # for neuron in NEURON_LIST:
+        #     neuron.pos = neuron.pos + 10
+
+        # pass
+        # print ('sizes')
+        # print ('self.neuronLayer.size')
+        # print (self.neuronLayer.size)
+        # print ('self.neuronLayer.parent.size')
+        # print (self.neuronLayer.parent.size)
+        # print ('self.size')
+        # print (self.size)
 
 
     def draw(self, *args, **kwargs):
@@ -149,6 +165,8 @@ class gridNeuronsWidget(FloatLayout):
         else:
             self.updateNeuronPos()
 
+
+            # Alternative:
 
             # Logic:
             # If INIT and not grid change,reposition neurons.
