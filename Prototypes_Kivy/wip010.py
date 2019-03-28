@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """
-NNV - wip 009:
+NNV - wip 010:
+
+Decuoples some neuronGrid functionality
 
 """
 
@@ -39,10 +41,9 @@ NEURON_LIST = []
 TODO:
 PLACE NEURONS:
 
-- Neuron as Object xxx
-- Hover click/focus:
-... remove factory, implement at neuron level ?
-
+- Neuron as Object...
+GO back to figuring out how to move when screen resizes
+- Hover click/focus: Do Hover + neuron experiment, then integrate here...
 - Place.
 
 >> To Animate Neuron
@@ -51,25 +52,14 @@ PLACE NEURONS:
 
 
 class Neuron(Widget):
-
-        hovered = False
-        border_point= None
-
         def __init__(self, **kwargs):
             self.pos = kwargs.get('_pos')
             self.size  = kwargs.get('_size')
-            Window.bind(mouse_pos=self.on_mouse_pos)
             super(Neuron, self).__init__()
             with self.canvas:
                 Color(0.1, 0.1, 0.1, mode='rgb')
                 self.bg = Ellipse(pos = self.pos, size=self.size)
 
-        def on_mouse_pos(self, *args):
-            pass
-            # if self.collide_point(*args[1]): print (self.to_window(*args[1]))
-            # if self.collide_point(*args[1]): print (self.to_parent(*args[1]))
-            # if self.collide_point(*args[1]): print (self.to_widget(*args[1]))
-            # if self.collide_point(*args[1]): print (self.to_local(*args[1]))
 
 class gridNeuronsWidget(RelativeLayout):
     def __init__(self, *args, **kwargs):
@@ -81,8 +71,10 @@ class gridNeuronsWidget(RelativeLayout):
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
         self._gridSize = 1
-        self.neuronsInitialized = False
 
+    def removeNeurons(self, *args, **kwargs):
+        for neuron in NEURON_LIST:
+            self.neuronLayer.remove_widget(neuron)
 
     def initNeurons(self, *args, **kwargs):
         if float(math.log(self._gridSize)) > 0:
@@ -106,14 +98,7 @@ class gridNeuronsWidget(RelativeLayout):
                 print('Neuron placed at:' + str(n.pos))
                 print('With Size:' + str(n.size))
         print('|-----------------*-----------------|')
-        self.neuronsInitialized = True
 
-
-    def updateNeuronPos(self, *args, **kwargs):
-        # Note: Ideally neuron pos needs to be binded to neuronLayer
-        for neuron in NEURON_LIST:
-            self.neuronLayer.remove_widget(neuron)
-        self.initNeurons()
 
     def draw(self, *args, **kwargs):
         # method vars :
@@ -166,14 +151,10 @@ class gridNeuronsWidget(RelativeLayout):
                         GRIDHEIGHT - XMARGIN
                     ],
                     width=1)
-
-        if not self.neuronsInitialized:
-            self.initNeurons()
-        else:
-            self.updateNeuronPos()
+        self.initNeurons()
 
 
-class wip009(App):
+class wip010(App):
 
     # class vars:
     title = "NNV - wip007"
@@ -187,6 +168,7 @@ class wip009(App):
             self.gridSize += 1
         elif self.gridSize >= 0:
             self.gridSize -= 1
+        self.grid.removeNeurons()
         self.grid.draw(_gridSize=self.gridSize - 1)
 
     # The Big enchilada :
@@ -210,16 +192,4 @@ class wip009(App):
 
 
 if __name__ == "__main__":
-    wip009().run()
-
-
-
-#
-# Neuron placed at:[130, 30.0]
-# With Size:[60, 60]
-# Neuron placed at:[130, 710.0]
-# With Size:[60, 60]
-# Neuron placed at:[810, 30.0]
-# With Size:[60, 60]
-# Neuron placed at:[810, 710.0]
-# With Size:[60, 60]
+    wip010().run()
