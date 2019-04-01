@@ -9,10 +9,9 @@ Resizable Grid with neurons...
 from kivy.config import Config
 # Window :
 Config.set('graphics', 'width', '1200')
-Config.set('graphics', 'height', '400')
+Config.set('graphics', 'height', '800')
 
 from kivy.core.window import Window
-
 import os
 import math
 from kivy.lang import Builder
@@ -36,30 +35,42 @@ YMARGIN = 60
 NEURON_LIST = []
 
 '''
+
 TODO:
 PLACE NEURONS:
 
-- Hover click/focus: Do Hover + neuron experiment, then integrate here...
+- Hover xxx
 - Place.
 - To Animate Neuron
 
 '''
-
 
 class Neuron(Widget):
     def __init__(self, **kwargs):
         super(Neuron, self).__init__(**kwargs)
         self.draw()
         self.bind(pos=self.redraw, size=self.redraw)
+        Window.bind(mouse_pos=self.on_mouse_pos)
 
     def draw(self):
         with self.canvas:
-            Color(0.1, 0.1, 0.1, mode='rgb')
+            Color(0.5, 0.5, 0.5, mode='rgb')
             self.ellipse = Ellipse(width=dp(2))
 
     def redraw(self, *args):
         self.ellipse.pos = self.pos
         self.ellipse.size = self.size
+
+    def on_mouse_pos(self, *args):
+        self.canvas.clear()
+        if self.collide_point(*args[1]):
+            with self.canvas:
+                Color(1, 0.1, 0.1, mode='rgb')
+                self.ellipse = Ellipse(width=dp(2))
+            self.redraw()
+        else:
+            self.draw()
+            self.redraw()
 
 
 class gridNeuronsWidget(Widget):
@@ -71,7 +82,7 @@ class gridNeuronsWidget(Widget):
         self.neuronLayer = Widget(opacity=1)
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
-        self._gridSize = 1
+        self._gridSize = 5
         self._neuronSize = 60
         self.initNeurons()
 
@@ -103,7 +114,7 @@ class gridNeuronsWidget(Widget):
             self._gridSize = _gridSize
 
         if float(math.log(self._gridSize)) > 0:
-            self.neuronSize = 1 / float(math.log(self._gridSize)) * 40
+            self.neuronSize = 1 / float(math.log(self._gridSize)) * 46
         else:
             self.neuronSize = 60
         GRIDWIDTH = self.size[0]
