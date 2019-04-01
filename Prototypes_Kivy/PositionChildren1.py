@@ -59,6 +59,7 @@ class RootWidget(Widget):
             self.center_y
         ]
         self.circle1.pos = [self.center_x + 100, self.center_y + 100]
+        self.circle1.size = [20, 20]
         self.circle2.pos = [self.center_x + 100, self.center_y - 200]
         self.circle3.pos = [self.center_x - 200, self.center_y + 100]
         self.circle4.pos = [self.center_x - 200, self.center_y - 200]

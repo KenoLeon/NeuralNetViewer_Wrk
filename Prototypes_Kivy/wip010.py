@@ -38,23 +38,14 @@ NEURON_LIST = []
 TODO:
 PLACE NEURONS:
 
-- Neuron as Object...
-GO back to figuring out how to move when screen resizes
+- Neuron as Object...xxx
+GO back to figuring out how to move when screen resizes... xxx
+
 - Hover click/focus: Do Hover + neuron experiment, then integrate here...
 - Place.
-
->> To Animate Neuron
+- To Animate Neuron
 
 '''
-
-# class Neuron(Widget):
-#         def __init__(self, **kwargs):
-#             self.pos = kwargs.get('_pos')
-#             self.size  = kwargs.get('_size')
-#             super(Neuron, self).__init__()
-#             with self.canvas:
-#                 Color(0.4, 0.4, 0.4, mode='rgb')
-#                 self.bg = Ellipse(pos = self.pos, size=self.size)
 
 
 class Neuron(Widget):
@@ -65,13 +56,14 @@ class Neuron(Widget):
 
     def draw(self):
         with self.canvas:
-            Color(0.4, 0.4, 0.4, 1)
-            self.ellipse = Ellipse()
+            Color(0.1, 0.1, 0.1, mode='rgb')
+            self.ellipse = Ellipse(width=dp(2))
 
     def redraw(self, *args):
         # reuse
         self.ellipse.pos = self.pos
         self.ellipse.size = self.size
+        print(self.size)
 
 
 class gridNeuronsWidget(Widget):
@@ -82,19 +74,33 @@ class gridNeuronsWidget(Widget):
         self.bind(size=self.draw)
         # BINDERS !!
         self.gridLayer = BoxLayout(opacity=1)
-        self.neuronLayer = RelativeLayout(opacity=1)
+        self.neuronLayer = Widget(opacity=1)
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
         self._gridSize = 1
+        self._neuronSize = 60
         self.initNeurons()
 
     def initNeurons(self):
             for i in range(self._gridSize + 1):
                 for ii in range(self._gridSize + 1):
-                    n = Neuron(size=[2, 2])
+                    n = Neuron(size = [100,100])
                     NEURON_LIST.append(n)
                     self.neuronLayer.add_widget(n)
 
+    def removeNeurons(self, *args, **kwargs):
+        for neuron in NEURON_LIST:
+            self.neuronLayer.remove_widget(neuron)
+        NEURON_LIST.clear()
+
+
+    def reInitGrid(self, *args, **kwargs):
+        _gridSize = kwargs.get('_gridSize', self._gridSize)
+        if (_gridSize):
+            self._gridSize = _gridSize
+        self.removeNeurons()
+        self.initNeurons()
+        self.draw()
 
     def draw(self, *args, **kwargs):
         # method vars :
@@ -102,15 +108,15 @@ class gridNeuronsWidget(Widget):
         if (_gridSize):
             self._gridSize = _gridSize
 
-        if float(math.log(_gridSize)) > 0:
-            NEURONSIZE = 1 / float(math.log(_gridSize)) * 40
+        if float(math.log(self._gridSize)) > 0:
+            self.neuronSize = 1 / float(math.log(self._gridSize)) * 40
         else:
-            NEURONSIZE = 60
+            self.neuronSize = 60
         GRIDWIDTH = self.size[0]
         GRIDHEIGHT = self.size[1]
         offsetY = (
             (GRIDWIDTH - (GRIDHEIGHT - (XMARGIN + YMARGIN))) / 2) - YMARGIN
-        STEP = (GRIDHEIGHT - (XMARGIN + YMARGIN)) / _gridSize
+        STEP = (GRIDHEIGHT - (XMARGIN + YMARGIN)) / self._gridSize
 
         with self.canvas.before:
             Color(0.1, 0.1, 0.1, mode='rgb')
@@ -119,7 +125,7 @@ class gridNeuronsWidget(Widget):
         self.gridLayer.canvas.clear()
         with self.gridLayer.canvas:
             Color(0.6, 0.6, 0.6, mode='rgb')
-            for i in range(_gridSize):
+            for i in range(self._gridSize):
                 Line(
                     points=[
                         XMARGIN + offsetY, YMARGIN + (i * STEP),
@@ -132,7 +138,7 @@ class gridNeuronsWidget(Widget):
                         YMARGIN + (i * STEP) + offsetY, GRIDHEIGHT - XMARGIN
                     ],
                     width=1)
-            if i == (_gridSize - 1):
+            if i == (self._gridSize - 1):
                 Line(
                     points=[
                         XMARGIN + offsetY, YMARGIN + ((i + 1) * STEP),
@@ -147,21 +153,22 @@ class gridNeuronsWidget(Widget):
                         GRIDHEIGHT - XMARGIN
                     ],
                     width=1)
-            print('|-----------------*-----------------|')
 
+            print('|-----------------*-----------------|')
             nC = 0
             for i in range(self._gridSize + 1):
                 for ii in range(self._gridSize + 1):
                     print('nC:' + str(nC))
-                    print('i:' + str(i))
-                    print('ii:' + str(ii))
+                    print('neuronSize:' + str(self.neuronSize))
                     pos = (int(XMARGIN + (i * STEP) +
-                             offsetY - NEURONSIZE / 2),
-                         int((YMARGIN) + (ii * STEP)) - NEURONSIZE / 2)
+                             offsetY - self.neuronSize / 2),
+                         int((YMARGIN) + (ii * STEP)) - self.neuronSize / 2)
+                    NEURON_LIST[nC].size =[self.neuronSize, self.neuronSize]
                     NEURON_LIST[nC].pos = pos
-                    print('Will position neuronn at: ' + str(pos))
+                    print(NEURON_LIST[nC].size)
+                    # NEURON_LIST[nC].size = (10,10)
+                    print('Will position neuron at: ' + str(pos))
                     nC += 1
-
             print('|-----------------*-----------------|')
 
 class wip010(App):
@@ -178,8 +185,7 @@ class wip010(App):
             self.gridSize += 1
         elif self.gridSize >= 0:
             self.gridSize -= 1
-        # self.grid.removeNeurons()
-        self.grid.draw(_gridSize=self.gridSize - 1)
+        self.grid.reInitGrid(_gridSize=self.gridSize - 1)
 
     # The Big enchilada :
     def build(self):
@@ -203,58 +209,3 @@ class wip010(App):
 
 if __name__ == "__main__":
     wip010().run()
-
-
-
-        # def initNeurons(self, *args, **kwargs):
-        #     if float(math.log(self._gridSize)) > 0:
-        #         NEURONSIZE = 1 / float(math.log(self._gridSize)) * 40
-        #     else:
-        #         NEURONSIZE = 60
-        #     GRIDWIDTH = self.size[0]
-        #     GRIDHEIGHT = self.size[1]
-        #     offsetY = (
-        #         (GRIDWIDTH - (GRIDHEIGHT - (XMARGIN + YMARGIN))) / 2) - YMARGIN
-        #     STEP = (GRIDHEIGHT - (XMARGIN + YMARGIN)) / self._gridSize
-        #
-        #     print('|-----------------*-----------------|')
-        #     for i in range(self._gridSize + 1):
-        #         for ii in range(self._gridSize + 1):
-        #             n = Neuron(size_hint=(None, None), pos=(int(XMARGIN + (i * STEP) +
-        #                      offsetY - NEURONSIZE / 2),
-        #                  int((YMARGIN) + (ii * STEP)) - NEURONSIZE / 2),size=(NEURONSIZE,NEURONSIZE))
-        #             NEURON_LIST.append(n)
-        #             self.neuronLayer.add_widget(n)
-        #             print('Neuron placed at:' + str(n.pos))
-        #             print('With Size:' + str(n.size))
-        #     print('|-----------------*-----------------|')
-
-
-            # NEURONSIZE = (8, 8)
-            # if float(math.log(self._gridSize)) > 0:
-            #     NEURONSIZE = 1 / float(math.log(self._gridSize)) * 40
-            # else:
-            #     NEURONSIZE = 60
-
-            # for i in range(self._gridSize + 1):
-            #     for ii in range(self._gridSize + 1):
-            #         n = Neuron(size=[2, 2])
-            #         NEURON_LIST.append(n)
-            #         self.neuronLayer.add_widget(n)
-
-
-        # def removeNeurons(self, *args, **kwargs):
-        #     for neuron in NEURON_LIST:
-        #         self.neuronLayer.remove_widget(neuron)
-
-
-
-        # for i in range(self._gridSize + 1):
-        #     for ii in range(self._gridSize + 1):
-        #         n = Neuron(size_hint=(None, None), pos=(int(XMARGIN + (i * STEP) +
-        #                  offsetY - NEURONSIZE / 2),
-        #              int((YMARGIN) + (ii * STEP)) - NEURONSIZE / 2),size=(NEURONSIZE,NEURONSIZE))
-        #         NEURON_LIST.append(n)
-        #         self.neuronLayer.add_widget(n)
-        #         print('Neuron placed at:' + str(n.pos))
-        #         print('With Size:' + str(n.size))
