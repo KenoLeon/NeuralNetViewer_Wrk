@@ -13,13 +13,18 @@ class circleChild( Widget):
 
     def draw(self):
         with self.canvas:
-            Color(0.4, 0.6, 0.9, 1)  # ConrflowerBlue
-            self.ellipse = Ellipse(width=dp(2))
+            Color(0, 0, 0, 1)
+            self.outline = Ellipse(width=dp(1))
+            Color(1, 1, 1, 1)  # RED
+            self.soma = Ellipse(width=dp(2))
 
     def redraw(self, *args):
-        # reuse
-        self.ellipse.pos = self.pos
-        self.ellipse.size = self.size
+        outlineWidth = 4
+        self.soma.pos = self.pos
+        self.soma.size = self.size
+        self.outline.pos = [self.pos[0]-outlineWidth/2,self.pos[1]-outlineWidth/2]
+        sizeO = self.size[0] + outlineWidth
+        self.outline.size = [sizeO,sizeO]
 
 class RootWidget(Widget):
     def __init__(self, **kwargs):
@@ -58,7 +63,7 @@ class RootWidget(Widget):
             self.center_x + 200,
             self.center_y
         ]
-        self.circle1.pos = [self.center_x + 100, self.center_y + 100]        
+        self.circle1.pos = [self.center_x + 100, self.center_y + 100]
         self.circle2.pos = [self.center_x + 100, self.center_y - 200]
         self.circle3.pos = [self.center_x - 200, self.center_y + 100]
         self.circle4.pos = [self.center_x - 200, self.center_y - 200]

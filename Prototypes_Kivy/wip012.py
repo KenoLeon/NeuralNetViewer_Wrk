@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """
-NNV - wip 011:
+NNV - wip 012:
 
-Resizable Grid with neurons...
+Resizable Grid with neurons and hover
 
 """
 
@@ -39,37 +39,50 @@ NEURON_LIST = []
 TODO:
 PLACE NEURONS:
 
-- Hover xxx
 - Extras:
-    - Hollow out on hover Mon Evening Tue Morning
-    - Mouse cursor Mon Evening Tue Morning
+    - Hollow out on hover Mon Evening Tue Morning (Needs Change to Line on Neuron Object ) XXX
+    - Mouse cursor Mon Evening Tue Morning (Needs Experiments)
 - Place.
 - To Animate Neuron
+
+BUG: Performance chokes on grid bigger than 13
 
 '''
 
 class Neuron(Widget):
+
+    # TODO: Optimize: colors
+
     def __init__(self, **kwargs):
         super(Neuron, self).__init__(**kwargs)
         self.draw()
         self.bind(pos=self.redraw, size=self.redraw)
         Window.bind(mouse_pos=self.on_mouse_pos)
+        self.outlineWidth = 2
 
     def draw(self):
+        self.canvas.clear()
         with self.canvas:
-            Color(0.5, 0.5, 0.5, mode='rgb')
-            self.ellipse = Ellipse(width=dp(2))
+            Color(0.1, 0.1, 0.1, 1)
+            self.outline = Ellipse(width=dp(1))
+            Color(0.1, 0.1, 0.1, mode='rgb')
+            self.soma = Ellipse(width=dp(2))
 
     def redraw(self, *args):
-        self.ellipse.pos = self.pos
-        self.ellipse.size = self.size
+        self.soma.pos = self.pos
+        self.soma.size = self.size
+        self.outline.pos = [self.pos[0]-self.outlineWidth/2,self.pos[1]-self.outlineWidth/2]
+        sizeO = self.size[0] + self.outlineWidth
+        self.outline.size = [sizeO,sizeO]
 
     def on_mouse_pos(self, *args):
         self.canvas.clear()
         if self.collide_point(*args[1]):
             with self.canvas:
-                Color(1, 0.1, 0.1, mode='rgb')
-                self.ellipse = Ellipse(width=dp(2))
+                Color(0.6, 0.6, 0.6, 1)
+                self.outline = Ellipse(width=dp(1))
+                Color(0.1, 0.1, 0.1, 1)
+                self.soma = Ellipse(width=dp(2))
             self.redraw()
         else:
             self.draw()
@@ -172,7 +185,7 @@ class gridNeuronsWidget(Widget):
                     NEURON_LIST[nC].pos = pos
                     nC += 1
 
-class wip011(App):
+class wip012(App):
 
     # class vars:
     title = "NNV - wip011"
@@ -209,4 +222,4 @@ class wip011(App):
 
 
 if __name__ == "__main__":
-    wip011().run()
+    wip012().run()
