@@ -40,16 +40,14 @@ GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
 
 
 '''
-
 TODO:
 PLACE NEURONS:
 
 - Extras:
     - Mouse cursor Mon Evening Tue Morning (Needs Experiments)
+
 - Place.
 - To Animate Neuron
-
-BUG: Performance chokes on grid bigger than 13
 
 '''
 
