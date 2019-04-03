@@ -38,16 +38,15 @@ NEURON_LIST = []
 BACKGROUND_COLOR = SOMA_COLOR = [0.1, 0.1, 0.1]
 GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
 
-
 '''
 TODO:
 PLACE NEURONS:
 
-- Extras:
-    - Mouse cursor Mon Evening Tue Morning (Needs Experiments)
-
 - Place.
 - To Animate Neuron
+
+- Extras:
+    - Mouse cursor Mon Evening Tue Morning (Needs Experiments)
 
 '''
 
@@ -70,9 +69,11 @@ class Neuron(Widget):
     def redraw(self, *args):
         self.soma.pos = self.pos
         self.soma.size = self.size
-        self.outline.pos = [self.pos[0]-OUTLINE_WIDTH/2,self.pos[1]-OUTLINE_WIDTH/2]
+        self.outline.pos = [
+            self.pos[0] - OUTLINE_WIDTH / 2, self.pos[1] - OUTLINE_WIDTH / 2
+        ]
         sizeO = self.size[0] + OUTLINE_WIDTH
-        self.outline.size = [sizeO,sizeO]
+        self.outline.size = [sizeO, sizeO]
 
     def on_mouse_pos(self, *args):
         if self.collide_point(*args[1]):
@@ -101,17 +102,16 @@ class gridNeuronsWidget(Widget):
         self.initNeurons()
 
     def initNeurons(self):
-            for i in range(self._gridSize + 1):
-                for ii in range(self._gridSize + 1):
-                    n = Neuron(size = [100,100])
-                    NEURON_LIST.append(n)
-                    self.neuronLayer.add_widget(n)
+        for i in range(self._gridSize + 1):
+            for ii in range(self._gridSize + 1):
+                n = Neuron(size=[100, 100])
+                NEURON_LIST.append(n)
+                self.neuronLayer.add_widget(n)
 
     def removeNeurons(self, *args, **kwargs):
         for neuron in NEURON_LIST:
             self.neuronLayer.remove_widget(neuron)
         NEURON_LIST.clear()
-
 
     def reInitGrid(self, *args, **kwargs):
         _gridSize = kwargs.get('_gridSize', self._gridSize)
@@ -176,12 +176,13 @@ class gridNeuronsWidget(Widget):
             nC = 0
             for i in range(self._gridSize + 1):
                 for ii in range(self._gridSize + 1):
-                    pos = (int(XMARGIN + (i * STEP) +
-                             offsetY - self.neuronSize / 2),
-                         int((YMARGIN) + (ii * STEP)) - self.neuronSize / 2)
-                    NEURON_LIST[nC].size =[self.neuronSize, self.neuronSize]
+                    pos = (int(XMARGIN + (i * STEP) + offsetY -
+                               self.neuronSize / 2),
+                           int((YMARGIN) + (ii * STEP)) - self.neuronSize / 2)
+                    NEURON_LIST[nC].size = [self.neuronSize, self.neuronSize]
                     NEURON_LIST[nC].pos = pos
                     nC += 1
+
 
 class wip012(App):
 
