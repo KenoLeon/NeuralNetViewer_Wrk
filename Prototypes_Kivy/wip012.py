@@ -32,7 +32,12 @@ from kivy.uix.behaviors import ButtonBehavior
 
 XMARGIN = 60
 YMARGIN = 60
+OUTLINE_WIDTH = 2
 NEURON_LIST = []
+# COLORS:
+BACKGROUND_COLOR = SOMA_COLOR = [0.1, 0.1, 0.1]
+GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
+
 
 '''
 
@@ -40,7 +45,6 @@ TODO:
 PLACE NEURONS:
 
 - Extras:
-    - Hollow out on hover Mon Evening Tue Morning (Needs Change to Line on Neuron Object ) XXX
     - Mouse cursor Mon Evening Tue Morning (Needs Experiments)
 - Place.
 - To Animate Neuron
@@ -51,38 +55,34 @@ BUG: Performance chokes on grid bigger than 13
 
 class Neuron(Widget):
 
-    # TODO: Optimize: colors
-
     def __init__(self, **kwargs):
         super(Neuron, self).__init__(**kwargs)
         self.draw()
         self.bind(pos=self.redraw, size=self.redraw)
         Window.bind(mouse_pos=self.on_mouse_pos)
-        self.outlineWidth = 2
 
     def draw(self):
         self.canvas.clear()
         with self.canvas:
-            Color(0.1, 0.1, 0.1, 1)
-            self.outline = Ellipse(width=dp(1))
-            Color(0.1, 0.1, 0.1, mode='rgb')
-            self.soma = Ellipse(width=dp(2))
+            Color(*SOMA_COLOR)
+            self.outline = Ellipse()
+            Color(*SOMA_COLOR)
+            self.soma = Ellipse()
 
     def redraw(self, *args):
         self.soma.pos = self.pos
         self.soma.size = self.size
-        self.outline.pos = [self.pos[0]-self.outlineWidth/2,self.pos[1]-self.outlineWidth/2]
-        sizeO = self.size[0] + self.outlineWidth
+        self.outline.pos = [self.pos[0]-OUTLINE_WIDTH/2,self.pos[1]-OUTLINE_WIDTH/2]
+        sizeO = self.size[0] + OUTLINE_WIDTH
         self.outline.size = [sizeO,sizeO]
 
     def on_mouse_pos(self, *args):
-        self.canvas.clear()
         if self.collide_point(*args[1]):
             with self.canvas:
-                Color(0.6, 0.6, 0.6, 1)
-                self.outline = Ellipse(width=dp(1))
-                Color(0.1, 0.1, 0.1, 1)
-                self.soma = Ellipse(width=dp(2))
+                Color(*OUTLINE_COLOR)
+                self.outline = Ellipse()
+                Color(*SOMA_COLOR)
+                self.soma = Ellipse()
             self.redraw()
         else:
             self.draw()
@@ -140,12 +140,12 @@ class gridNeuronsWidget(Widget):
         STEP = (GRIDHEIGHT - (XMARGIN + YMARGIN)) / self._gridSize
 
         with self.canvas.before:
-            Color(0.1, 0.1, 0.1, mode='rgb')
+            Color(*BACKGROUND_COLOR)
             self.bg = Rectangle(pos=self.pos, size=self.size)
         # GRID:
         self.gridLayer.canvas.clear()
         with self.gridLayer.canvas:
-            Color(0.6, 0.6, 0.6, mode='rgb')
+            Color(*GRID_COLOR)
             for i in range(self._gridSize):
                 Line(
                     points=[
