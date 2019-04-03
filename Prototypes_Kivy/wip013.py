@@ -51,21 +51,29 @@ PLACE NEURONS:
 
 '''
 
-class Neuron(Widget):
+class Neuron(ButtonBehavior, Widget):
 
     def __init__(self, **kwargs):
         super(Neuron, self).__init__(**kwargs)
+        self.place = False
         self.draw()
         self.bind(pos=self.redraw, size=self.redraw)
         Window.bind(mouse_pos=self.on_mouse_pos)
 
     def draw(self):
         self.canvas.clear()
-        with self.canvas:
-            Color(*SOMA_COLOR)
-            self.outline = Ellipse()
-            Color(*SOMA_COLOR)
-            self.soma = Ellipse()
+        if not self.place:
+            with self.canvas:
+                Color(*SOMA_COLOR)
+                self.outline = Ellipse()
+                Color(*SOMA_COLOR)
+                self.soma = Ellipse()
+        elif self.place:
+            with self.canvas:
+                Color(*OUTLINE_COLOR)
+                self.outline = Ellipse()
+                Color(*SOMA_COLOR)
+                self.soma = Ellipse()
 
     def redraw(self, *args):
         self.soma.pos = self.pos
@@ -87,6 +95,12 @@ class Neuron(Widget):
         else:
             self.draw()
             self.redraw()
+
+    def on_press(self):
+        self.place = not self.place
+
+    def on_release(self):
+        print('I was released')
 
 
 class gridNeuronsWidget(Widget):
