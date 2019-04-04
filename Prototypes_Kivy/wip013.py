@@ -34,24 +34,26 @@ XMARGIN = 60
 YMARGIN = 60
 OUTLINE_WIDTH = 2
 NEURON_LIST = []
+HOVER = False
 
 # COLORS:
 BACKGROUND_COLOR = SOMA_COLOR = [0.1, 0.1, 0.1]
 GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
 
 '''
+
 TODO:
 PLACE NEURONS:
 
-- Hover / Place
-- To Animate Neuron
+- Hover / Place XXX !
 
-- Extras:
-    - Mouse cursor Mon Evening Tue Morning (Needs Experiments)
+- To Animate Neuron
 
 '''
 
 class Neuron(ButtonBehavior, Widget):
+
+    hovered = False
 
     def __init__(self, **kwargs):
         super(Neuron, self).__init__(**kwargs)
@@ -85,7 +87,14 @@ class Neuron(ButtonBehavior, Widget):
         self.outline.size = [sizeO, sizeO]
 
     def on_mouse_pos(self, *args):
-        if self.collide_point(*args[1]):
+
+        pos = args[1]
+        inside = self.collide_point(*self.to_widget(*pos))
+        if self.hovered == inside:
+            return
+        self.hovered = inside
+        if inside:
+            Window.set_system_cursor('hand')
             with self.canvas:
                 Color(*OUTLINE_COLOR)
                 self.outline = Ellipse()
@@ -93,6 +102,7 @@ class Neuron(ButtonBehavior, Widget):
                 self.soma = Ellipse()
             self.redraw()
         else:
+            Window.set_system_cursor('arrow')
             self.draw()
             self.redraw()
 
