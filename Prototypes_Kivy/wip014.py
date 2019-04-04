@@ -9,7 +9,7 @@ Resizable Grid with neurons, hover and place
 from kivy.config import Config
 # Window :
 Config.set('graphics', 'width', '1200')
-Config.set('graphics', 'height', '800')
+Config.set('graphics', 'height', '500')
 
 from kivy.core.window import Window
 import os
@@ -242,6 +242,10 @@ class wip014(App):
             os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), 'UI_1.kv'))
         sideBar.add_widget(UI_1)
+        UI_2 = Builder.load_file(
+            os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), 'UI_2.kv'))
+        sideBar.add_widget(UI_2)
         sideBar.add_widget(Widget())
         root.add_widget(self.grid)
         root.add_widget(sideBar)
