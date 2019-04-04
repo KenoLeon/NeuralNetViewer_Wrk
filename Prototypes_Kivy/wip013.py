@@ -46,7 +46,6 @@ TODO:
 PLACE NEURONS:
 
 - Hover / Place XXX !
-
 - To Animate Neuron
 
 '''
