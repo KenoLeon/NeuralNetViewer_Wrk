@@ -1,10 +1,9 @@
 GridLayout:
     cols: 1
-        # pos_hint:{"center_y":0.10}
     Button:
         font_size: 14
         text: 'Play/Stop'
         background_normal: ''
         background_color: .2,.2,.2,1
-        size_hint: .25,None
-        height: 40
+        size_hint: 1,1,
+        on_press: app.playStop()

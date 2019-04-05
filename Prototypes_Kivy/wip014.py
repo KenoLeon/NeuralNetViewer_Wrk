@@ -228,25 +228,29 @@ class wip014(App):
             self.gridSize -= 1
         self.grid.reInitGrid(_gridSize=self.gridSize - 1)
 
+
+    def playStop(self):
+        print('will playStop')
+
+
     # The Big enchilada :
     def build(self):
         root = BoxLayout()
         sideBar = BoxLayout(
-            padding=4,
             orientation='vertical',
-            size_hint=(None, 0.60),
+            size_hint=(None, None),
             width=200,
-            spacing=2,
+            spacing=4,
             pos_hint={'top': 1})
         UI_1 = Builder.load_file(
             os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), 'UI_1.kv'))
-        sideBar.add_widget(UI_1)
         UI_2 = Builder.load_file(
             os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), 'UI_2.kv'))
+        sideBar.add_widget(UI_1)
         sideBar.add_widget(UI_2)
-        sideBar.add_widget(Widget())
+
         root.add_widget(self.grid)
         root.add_widget(sideBar)
         return root
