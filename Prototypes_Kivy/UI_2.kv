@@ -1,9 +1,23 @@
 GridLayout:
     cols: 1
+    padding: 4
+    spacing: 4
     Button:
         font_size: 14
         text: 'Play/Stop'
         background_normal: ''
         background_color: .2,.2,.2,1
-        size_hint: 1,1,
+        height: 40
         on_press: app.playStop()
+        size: 200, 40
+        size_hint: None, None
+
+    Button:
+        font_size: 14
+        text: 'Connect'
+        background_normal: ''
+        background_color: .2,.2,.2,1
+        height: 40
+        on_press: app.playStop()
+        size: 200, 40
+        size_hint: None, None
