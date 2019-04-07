@@ -43,8 +43,13 @@ GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
 '''
 
 TODO:
+
 Animate Neurons...
-Play/Stop button
+Play/Stop button xxx
+
+
+
+
 Game Loop
 Neurotransmitter + box fill
 
@@ -64,6 +69,10 @@ class Neuron(ButtonBehavior, Widget):
         self.draw()
         self.bind(pos=self.redraw, size=self.redraw)
         Window.bind(mouse_pos=self.on_mouse_pos)
+
+
+    def clipRect(self):
+        pass
 
     def draw(self):
         self.canvas.clear()
