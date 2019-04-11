@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-NNV - wip 014:
+NNV - wip 015:
 
 Resizable Grid with neurons, hover and place
 
@@ -44,11 +44,10 @@ GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
 
 TODO:
 
-Animate Neurons...
-Play/Stop button xxx
+Neurotransmitter + box fill + Outline + Place
 
+Animate Neurons...
 Game Loop
-Neurotransmitter + box fill
 
 To Connections.
 To refinements.
@@ -223,10 +222,10 @@ class gridNeuronsWidget(Widget):
                     nC += 1
 
 
-class wip014(App):
+class wip015(App):
 
     # class vars:
-    title = "NNV - wip014"
+    title = "NNV - wip015"
     grid = gridNeuronsWidget()
     gridSize = BoundedNumericProperty(
         grid._gridSize + 1, min=2, max=20, errorvalue=2)
@@ -268,7 +267,7 @@ class wip014(App):
 
 
 if __name__ == "__main__":
-    wip014().run()
+    wip015().run()
 
 
 
