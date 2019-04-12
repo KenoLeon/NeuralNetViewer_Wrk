@@ -48,6 +48,8 @@ RED = [1,0,0]
 
 TODO:
 
+BUG on press exit
+
 Animate Neurons...
 Game Loop
 
