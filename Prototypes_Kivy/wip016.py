@@ -48,11 +48,8 @@ RED = [1,0,0]
 
 TODO:
 
-BUG on press exit
-
 Animate Neurons...
 Game Loop
-
 
 To Connections.
 To refinements.
@@ -63,7 +60,7 @@ To next spec.
 class Neuron(ButtonBehavior, Widget):
 
     hovered = False
-    baseNTLevel = 0.4
+    baseNTLevel = 0.6
 
     def __init__(self, **kwargs):
         super(Neuron, self).__init__(**kwargs)
@@ -133,6 +130,8 @@ class Neuron(ButtonBehavior, Widget):
 
     def on_press(self):
         self.place = not self.place
+        self.draw()
+        self.redraw()
 
     def on_release(self):
         pass
