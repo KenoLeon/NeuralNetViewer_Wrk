@@ -40,14 +40,19 @@ HOVER = False
 BACKGROUND_COLOR = SOMA_COLOR = [0.1, 0.1, 0.1]
 GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
 
+# TEST COLORS
+RED = [1,0,0]
+
+
 '''
 
 TODO:
 
-Neurotransmitter + box fill + Outline + Place
-
 Animate Neurons...
 Game Loop
+
+
+
 
 To Connections.
 To refinements.
@@ -58,7 +63,7 @@ TO next spec.
 class Neuron(ButtonBehavior, Widget):
 
     hovered = False
-    baseNTLevel = 0.8
+    baseNTLevel = 0.4
 
     def __init__(self, **kwargs):
         super(Neuron, self).__init__(**kwargs)
@@ -67,37 +72,43 @@ class Neuron(ButtonBehavior, Widget):
         self.bind(pos=self.redraw, size=self.redraw)
         Window.bind(mouse_pos=self.on_mouse_pos)
 
-    # def clipRect(self):
-    #     clipRect = self._rect.copy()
-    #     clipRect.height = clipRect.height * (1 - self.ntLevel)
-    #     return clipRect
-
     def draw(self):
         self.canvas.clear()
-        with self.canvas:
-            StencilPush()
-            Color(*OUTLINE_COLOR)
-            # ADD extra outline ?
-            self.outline = Ellipse()
-            StencilUse()
-            Color(*SOMA_COLOR)
-            self.soma = Ellipse()
-            Color(*OUTLINE_COLOR)
-            self.ntLevel = Rectangle()
-            StencilUnUse()
-            StencilPop()
+        if not self.place:
+            with self.canvas:
+                Color(*SOMA_COLOR)
+                self.outline = Ellipse()
+                Color(*SOMA_COLOR)
+                self.soma = Ellipse()
+        elif self.place:
+            with self.canvas:
+                StencilPush()
+                self.mask = Ellipse()
+                StencilUse()
+                Color(*OUTLINE_COLOR)
+                self.outline = Ellipse()
+                Color(*SOMA_COLOR)
+                self.soma = Ellipse()
+                Color(*OUTLINE_COLOR)
+                self.ntLevel = Rectangle()
+                StencilUnUse()
+                StencilPop()
 
 
     def redraw(self, *args):
+        sizeO = [self.size[0] + OUTLINE_WIDTH,self.size[0] + OUTLINE_WIDTH]
+        posO = [self.pos[0] - OUTLINE_WIDTH / 2, self.pos[1] - OUTLINE_WIDTH / 2]
+
+        if self.place:
+            self.mask.pos = posO
+            self.mask.size = sizeO
+            self.ntLevel.pos = self.pos
+            self.ntLevel.size = [self.size[0], self.size[1] * (1 - self.baseNTLevel)]
+
         self.soma.pos = self.pos
         self.soma.size = self.size
-        self.ntLevel.pos = self.pos
-        self.ntLevel.size = [self.size[0], self.size[1] * (1 - self.baseNTLevel)]
-        self.outline.pos = [
-            self.pos[0] - OUTLINE_WIDTH / 2, self.pos[1] - OUTLINE_WIDTH / 2
-        ]
-        sizeO = self.size[0] + OUTLINE_WIDTH
-        self.outline.size = [sizeO, sizeO]
+        self.outline.pos = posO
+        self.outline.size = sizeO
 
     def on_mouse_pos(self, *args):
 
@@ -108,11 +119,12 @@ class Neuron(ButtonBehavior, Widget):
         self.hovered = inside
         if inside:
             Window.set_system_cursor('hand')
-            with self.canvas:
-                Color(*OUTLINE_COLOR)
-                self.outline = Ellipse()
-                Color(*SOMA_COLOR)
-                self.soma = Ellipse()
+            if not self.place:
+                with self.canvas:
+                    Color(*OUTLINE_COLOR)
+                    self.outline = Ellipse()
+                    Color(*SOMA_COLOR)
+                    self.soma = Ellipse()
             self.redraw()
         else:
             Window.set_system_cursor('arrow')
@@ -268,39 +280,3 @@ class wip015(App):
 
 if __name__ == "__main__":
     wip015().run()
-
-
-
-
-    # def draw(self):
-    #     self.canvas.clear()
-    #
-    #
-    #     if not self.place:
-    #         with self.canvas:
-    #             Color(*SOMA_COLOR)
-    #             self.outline = Ellipse()
-    #             Color(*SOMA_COLOR)
-    #             self.soma = Ellipse()
-    #     elif self.place:
-    #         with self.canvas:
-    #             Color(*OUTLINE_COLOR)
-    #             self.outline = Ellipse()
-    #             Color(*SOMA_COLOR)
-    #             self.soma = Ellipse()
-    #             Color(*OUTLINE_COLOR)
-    #             self.ntLevel = Rectangle()
-
-
-
-        # def redraw(self, *args):
-        #     self.soma.pos = self.pos
-        #     self.soma.size = self.size
-        #     if self.place:
-        #         self.ntLevel.pos = self.pos
-        #         self.ntLevel.size = [self.size[0], self.size[1] * (1 - self.baseNTLevel)]
-        #     self.outline.pos = [
-        #         self.pos[0] - OUTLINE_WIDTH / 2, self.pos[1] - OUTLINE_WIDTH / 2
-        #     ]
-        #     sizeO = self.size[0] + OUTLINE_WIDTH
-        #     self.outline.size = [sizeO, sizeO]
