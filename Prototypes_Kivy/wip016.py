@@ -51,7 +51,7 @@ TODO:
 Animate Neurons...
 Game Loop xxx
 
-- Neuron: Invert Mask
+- Neuron: Invert Mask XXX
 - Button, change text on press
 - Neuron: Refactor names
 
@@ -64,7 +64,7 @@ To next spec.
 class Neuron(ButtonBehavior, Widget):
 
     hovered = False
-    baseNTLevel = 0.6
+    baseNTLevel = 0.4
 
     def __init__(self, **kwargs):
         super(Neuron, self).__init__(**kwargs)
@@ -105,7 +105,7 @@ class Neuron(ButtonBehavior, Widget):
             self.mask.pos = posO
             self.mask.size = sizeO
             self.ntLevel.pos = self.pos
-            self.ntLevel.size = [self.size[0], self.size[1] * (1 - self.baseNTLevel)]
+            self.ntLevel.size = [self.size[0], self.size[1] * self.baseNTLevel]
 
         self.soma.pos = self.pos
         self.soma.size = self.size
