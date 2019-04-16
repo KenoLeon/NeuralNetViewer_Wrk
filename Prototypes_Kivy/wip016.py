@@ -53,7 +53,6 @@ Game Loop xxx
 
 - Neuron: Invert Mask XXX
 - Button, change text on press XXX
-
 - Neuron: Refactor names
 - FPS Control
 
