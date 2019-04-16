@@ -3,12 +3,14 @@ GridLayout:
     padding: 4
     spacing: 4
     ToggleButton:
+        id: playStop
         font_size: 14
         text: 'Play'
         background_normal: ''
         background_color: .2,.2,.2,1
         height: 40
         on_press: app.playStop()
+        on_state: self.text = 'Stop'if self.state == 'down' else 'Play'
         size: 200, 40
         size_hint: None, None
 

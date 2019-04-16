@@ -52,8 +52,12 @@ Animate Neurons...
 Game Loop xxx
 
 - Neuron: Invert Mask XXX
-- Button, change text on press
+- Button, change text on press XXX
+
 - Neuron: Refactor names
+- FPS Control
+
+
 
 To Connections.
 To refinements.
@@ -270,9 +274,10 @@ class wip016(App):
 
     def playStop(self):
         self._play = not self._play
+        # self.ids['playStop'].background_color = 1.0, 0.0, 0.0, 1.0
         if self._play == True:
             print('start clock')
-            self._event = Clock.schedule_interval(self.updateNeurons, 6.0 / 60.0)
+            self._event = Clock.schedule_interval(self.updateNeurons, 2.8 / 60.0)
         else:
             Clock.unschedule(self._event)
             print('stop clock')
