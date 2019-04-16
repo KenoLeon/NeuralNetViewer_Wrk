@@ -25,8 +25,8 @@ from kivy.uix.button import Button
 from kivy.metrics import dp
 from kivy.properties import BoundedNumericProperty, BooleanProperty, ObjectProperty
 from kivy.uix.widget import Widget
-from kivy.uix.behaviors import FocusBehavior
 from kivy.uix.behaviors import ButtonBehavior
+from kivy.clock import Clock
 
 #DEFAULT/GLOBAL VARS :
 
@@ -49,7 +49,11 @@ RED = [1,0,0]
 TODO:
 
 Animate Neurons...
-Game Loop
+Game Loop xxx
+
+- Neuron: Invert Mask
+- Button, change text on press
+- Neuron: Refactor names
 
 To Connections.
 To refinements.
@@ -68,6 +72,7 @@ class Neuron(ButtonBehavior, Widget):
         self.draw()
         self.bind(pos=self.redraw, size=self.redraw)
         Window.bind(mouse_pos=self.on_mouse_pos)
+        self.ntRelease = 0.1
 
     def draw(self):
         self.canvas.clear()
@@ -135,6 +140,18 @@ class Neuron(ButtonBehavior, Widget):
 
     def on_release(self):
         pass
+
+
+    def updateNeuron(self):
+        if self.place:
+            if self.baseNTLevel < 1:
+                self.baseNTLevel += self.ntRelease
+                self.redraw()
+            elif self.baseNTLevel >= 1:
+                self.redraw()
+                self.baseNTLevel = 0
+
+
 
 
 class gridNeuronsWidget(Widget):
@@ -240,6 +257,8 @@ class wip016(App):
     grid = gridNeuronsWidget()
     gridSize = BoundedNumericProperty(
         grid._gridSize + 1, min=2, max=20, errorvalue=2)
+    _play = False
+    _event = None
 
     # class Methods:
     def updateGrid(self, operation):
@@ -249,10 +268,18 @@ class wip016(App):
             self.gridSize -= 1
         self.grid.reInitGrid(_gridSize=self.gridSize - 1)
 
-
     def playStop(self):
-        print('will playStop')
+        self._play = not self._play
+        if self._play == True:
+            print('start clock')
+            self._event = Clock.schedule_interval(self.updateNeurons, 6.0 / 60.0)
+        else:
+            Clock.unschedule(self._event)
+            print('stop clock')
 
+    def updateNeurons(self, *args):
+        for neuron in NEURON_LIST:
+            neuron.updateNeuron()
 
     # The Big enchilada :
     def build(self):
