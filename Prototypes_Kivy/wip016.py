@@ -41,9 +41,7 @@ BACKGROUND_COLOR = SOMA_COLOR = [0.1, 0.1, 0.1]
 GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
 
 # TEST COLORS
-RED = [1,0,0]
-
-
+RED = [1, 0, 0]
 '''
 
 TODO:
@@ -63,6 +61,7 @@ To refinements.
 To next spec.
 
 '''
+
 
 class Neuron(ButtonBehavior, Widget):
 
@@ -99,10 +98,11 @@ class Neuron(ButtonBehavior, Widget):
                 StencilUnUse()
                 StencilPop()
 
-
     def redraw(self, *args):
-        sizeO = [self.size[0] + OUTLINE_WIDTH,self.size[0] + OUTLINE_WIDTH]
-        posO = [self.pos[0] - OUTLINE_WIDTH / 2, self.pos[1] - OUTLINE_WIDTH / 2]
+        sizeO = [self.size[0] + OUTLINE_WIDTH, self.size[0] + OUTLINE_WIDTH]
+        posO = [
+            self.pos[0] - OUTLINE_WIDTH / 2, self.pos[1] - OUTLINE_WIDTH / 2
+        ]
 
         if self.place:
             self.mask.pos = posO
@@ -144,7 +144,6 @@ class Neuron(ButtonBehavior, Widget):
     def on_release(self):
         pass
 
-
     def updateNeuron(self):
         if self.place:
             if self.baseNTLevel < 1:
@@ -153,8 +152,6 @@ class Neuron(ButtonBehavior, Widget):
             elif self.baseNTLevel >= 1:
                 self.redraw()
                 self.baseNTLevel = 0
-
-
 
 
 class gridNeuronsWidget(Widget):
@@ -273,10 +270,10 @@ class wip016(App):
 
     def playStop(self):
         self._play = not self._play
-        # self.ids['playStop'].background_color = 1.0, 0.0, 0.0, 1.0
         if self._play == True:
             print('start clock')
-            self._event = Clock.schedule_interval(self.updateNeurons, 2.8 / 60.0)
+            self._event = Clock.schedule_interval(self.updateNeurons,
+                                                  2.8 / 60.0)
         else:
             Clock.unschedule(self._event)
             print('stop clock')
