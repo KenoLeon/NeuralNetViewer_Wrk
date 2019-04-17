@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 """
-NNV - wip 016:
+NNV - wip 017:
 
-Resizable Grid with neurons, hover and place
+Resizable Grid with neurons, hover,place and Animation
 
 """
 
 from kivy.config import Config
 # Window :
 Config.set('graphics', 'width', '1200')
-Config.set('graphics', 'height', '500')
+Config.set('graphics', 'height', '600')
 
 from kivy.core.window import Window
 import os
@@ -46,16 +46,8 @@ RED = [1, 0, 0]
 
 TODO:
 
-Animate Neurons...
-Game Loop XXX
+Connections:
 
-- Neuron: Invert Mask XXX
-- Button, change text on press XXX
-- Neuron: Refactor names XXX nn
-- FPS Control XXX
-
-
-To Connections.
 To refinements.
 To next spec.
 
@@ -249,10 +241,10 @@ class gridNeuronsWidget(Widget):
                     nC += 1
 
 
-class wip016(App):
+class wip017(App):
 
     # APP VARS:
-    title = "NNV - wip016"
+    title = "NNV - wip017"
     grid = gridNeuronsWidget()
     gridSize = BoundedNumericProperty(
         grid._gridSize + 1, min=2, max=20, errorvalue=2)
@@ -316,4 +308,4 @@ class wip016(App):
 
 
 if __name__ == "__main__":
-    wip016().run()
+    wip017().run()
