@@ -23,7 +23,7 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.graphics import *
 from kivy.uix.button import Button
 from kivy.metrics import dp
-from kivy.properties import BoundedNumericProperty, BooleanProperty, ObjectProperty
+from kivy.properties import BoundedNumericProperty, BooleanProperty, ObjectProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.clock import Clock
@@ -47,13 +47,12 @@ RED = [1, 0, 0]
 TODO:
 
 Animate Neurons...
-Game Loop xxx
+Game Loop XXX
 
 - Neuron: Invert Mask XXX
 - Button, change text on press XXX
-- Neuron: Refactor names
-- FPS Control
-
+- Neuron: Refactor names XXX nn
+- FPS Control XXX
 
 
 To Connections.
@@ -259,6 +258,9 @@ class wip016(App):
         grid._gridSize + 1, min=2, max=20, errorvalue=2)
     _play = False
     _event = None
+    # _FPS = NumericProperty(24)
+    _FPS = BoundedNumericProperty(
+        24, min=1, max=120, errorvalue=1)
 
     # class Methods:
     def updateGrid(self, operation):
@@ -268,15 +270,25 @@ class wip016(App):
             self.gridSize -= 1
         self.grid.reInitGrid(_gridSize=self.gridSize - 1)
 
+    def updateFPS(self, operation):
+        if operation == True:
+            self._FPS += 1
+        else:
+            self._FPS -= 1
+
+        if self._play == True and self._event:
+            Clock.unschedule(self._event)
+            self._event = Clock.schedule_interval(self.updateNeurons,
+                                                  1 / self._FPS)
+
+
     def playStop(self):
         self._play = not self._play
         if self._play == True:
-            print('start clock')
             self._event = Clock.schedule_interval(self.updateNeurons,
-                                                  2.8 / 60.0)
+                                                  1 / self._FPS)
         else:
             Clock.unschedule(self._event)
-            print('stop clock')
 
     def updateNeurons(self, *args):
         for neuron in NEURON_LIST:
