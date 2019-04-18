@@ -44,6 +44,7 @@ RED = [1, 0, 0]
 
 # GLOBALS
 CONNECT = False
+PLACE = True
 
 '''
 
@@ -302,6 +303,11 @@ class wip017(App):
     def toggleConnect(self):
         global CONNECT
         CONNECT = not CONNECT
+        print(self)
+
+    def togglePlace(self):
+        global PLACE
+        PLACE = not PLACE
 
     def build(self):
         root = BoxLayout()
