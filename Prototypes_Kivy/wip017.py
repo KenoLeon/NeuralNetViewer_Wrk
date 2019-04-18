@@ -34,19 +34,26 @@ XMARGIN = 60
 YMARGIN = 60
 OUTLINE_WIDTH = 2
 NEURON_LIST = []
-HOVER = False
 
 # COLORS:
 BACKGROUND_COLOR = SOMA_COLOR = [0.1, 0.1, 0.1]
 GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
 
-# TEST COLORS
+# TEST COLORS:
 RED = [1, 0, 0]
+
+# GLOBALS
+CONNECT = False
+
 '''
 
 TODO:
 
 Connections:
+
+- PLACE ToggleButton ( Pressed by default )
+- Toggle with CONNECT
+
 
 To refinements.
 To next spec.
@@ -114,7 +121,10 @@ class Neuron(ButtonBehavior, Widget):
             return
         self.hovered = inside
         if inside:
-            Window.set_system_cursor('hand')
+            if CONNECT:
+                Window.set_system_cursor('crosshair')
+            else:
+                Window.set_system_cursor('hand')
             if not self.place:
                 with self.canvas:
                     Color(*OUTLINE_COLOR)
@@ -131,9 +141,13 @@ class Neuron(ButtonBehavior, Widget):
         self.place = not self.place
         self.draw()
         self.redraw()
+        if CONNECT:
+            print ('Will Start connect')
+
 
     def on_release(self):
         pass
+
 
     def updateNeuron(self):
         if self.place:
@@ -242,13 +256,13 @@ class gridNeuronsWidget(Widget):
 
 
 class wip017(App):
-
     # APP VARS:
     title = "NNV - wip017"
     grid = gridNeuronsWidget()
     gridSize = BoundedNumericProperty(
         grid._gridSize + 1, min=2, max=20, errorvalue=2)
     _play = False
+    _connect = False
     _event = None
     _FPS = BoundedNumericProperty(
         24, min=1, max=120, errorvalue=1)
@@ -284,6 +298,10 @@ class wip017(App):
     def updateNeurons(self, *args):
         for neuron in NEURON_LIST:
             neuron.updateNeuron()
+
+    def toggleConnect(self):
+        global CONNECT
+        CONNECT = not CONNECT
 
     def build(self):
         root = BoxLayout()

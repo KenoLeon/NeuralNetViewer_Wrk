@@ -54,12 +54,12 @@ GridLayout:
         size: 200, 44
         size_hint: None, None
 
-    Button:
+    ToggleButton:
         font_size: 14
         text: 'Connect'
         background_normal: ''
         background_color: .2,.2,.2,1
         height: 40
-        on_press: app.playStop()
+        on_press: app.toggleConnect()
         size: 200, 40
         size_hint: None, None
