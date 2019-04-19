@@ -43,8 +43,9 @@ GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
 RED = [1, 0, 0]
 
 # GLOBALS
-CONNECT = False
 PLACE = True
+CONNECT = False
+
 
 '''
 
@@ -52,8 +53,8 @@ TODO:
 
 Connections:
 
-- PLACE ToggleButton ( Pressed by default )
-- Toggle with CONNECT
+DRAG LINE/CONNECT :
+
 
 
 To refinements.
@@ -67,8 +68,10 @@ class Neuron(ButtonBehavior, Widget):
     hovered = False
     baseNTLevel = 0.4
 
+
     def __init__(self, **kwargs):
         super(Neuron, self).__init__(**kwargs)
+        self.always_release = True
         self.place = False
         self.draw()
         self.bind(pos=self.redraw, size=self.redraw)
@@ -126,7 +129,8 @@ class Neuron(ButtonBehavior, Widget):
                 Window.set_system_cursor('crosshair')
             else:
                 Window.set_system_cursor('hand')
-            if not self.place:
+
+            if not self.place and not CONNECT:
                 with self.canvas:
                     Color(*OUTLINE_COLOR)
                     self.outline = Ellipse()
@@ -139,15 +143,18 @@ class Neuron(ButtonBehavior, Widget):
             self.redraw()
 
     def on_press(self):
-        self.place = not self.place
-        self.draw()
-        self.redraw()
-        if CONNECT:
-            print ('Will Start connect')
+        if PLACE:
+            self.place = not self.place
+            self.draw()
+            self.redraw()
+        elif CONNECT:
+            print ('Dragging')
 
 
     def on_release(self):
-        pass
+        print ('released')
+        # if CONNECT:
+        #     print ('not Dragging')
 
 
     def updateNeuron(self):
@@ -301,13 +308,16 @@ class wip017(App):
             neuron.updateNeuron()
 
     def toggleConnect(self):
-        global CONNECT
+        global CONNECT, PLACE
         CONNECT = not CONNECT
-        print(self)
+        if PLACE == True:
+            PLACE = False
 
     def togglePlace(self):
-        global PLACE
+        global CONNECT, PLACE
         PLACE = not PLACE
+        if CONNECT == True:
+            CONNECT = False
 
     def build(self):
         root = BoxLayout()

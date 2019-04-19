@@ -55,7 +55,9 @@ GridLayout:
         size_hint: None, None
 
     ToggleButton:
+        id: placeToggle
         font_size: 14
+        group: "controls_1"
         text: 'Place'
         background_normal: ''
         background_color: .2,.2,.2,1
@@ -64,9 +66,10 @@ GridLayout:
         size: 200, 40
         size_hint: None, None
         state: 'down'
-
     ToggleButton:
+        id: connectToggle
         font_size: 14
+        group: "controls_1"
         text: 'Connect'
         background_normal: ''
         background_color: .2,.2,.2,1
