@@ -45,6 +45,7 @@ RED = [1, 0, 0]
 # GLOBALS
 PLACE = True
 CONNECT = False
+DRAGGING = False
 
 
 '''
@@ -55,7 +56,8 @@ Connections:
 
 DRAG LINE/CONNECT :
 
-
+- DRAG NOT DRAG BEHAVIOR xxx
+- WHERE TO DRAW CONNECTIONS ?, NEW LAYER ?
 
 To refinements.
 To next spec.
@@ -148,13 +150,14 @@ class Neuron(ButtonBehavior, Widget):
             self.draw()
             self.redraw()
         elif CONNECT:
-            print ('Dragging')
+            DRAGGING = True
+            print (DRAGGING)
 
 
     def on_release(self):
-        print ('released')
-        # if CONNECT:
-        #     print ('not Dragging')
+        if CONNECT:
+            DRAGGING = False
+            print (DRAGGING)
 
 
     def updateNeuron(self):
