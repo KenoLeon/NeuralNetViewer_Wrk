@@ -69,7 +69,7 @@ class Neuron(ButtonBehavior, Widget):
 
     hovered = False
     baseNTLevel = 0.4
-
+    mousePos = []
 
     def __init__(self, **kwargs):
         super(Neuron, self).__init__(**kwargs)
@@ -121,8 +121,8 @@ class Neuron(ButtonBehavior, Widget):
 
     def on_mouse_pos(self, *args):
 
-        pos = args[1]
-        inside = self.collide_point(*self.to_widget(*pos))
+        self.mousePos = args[1]
+        inside = self.collide_point(*self.to_widget(*self.mousePos))
         if self.hovered == inside:
             return
         self.hovered = inside
@@ -144,13 +144,15 @@ class Neuron(ButtonBehavior, Widget):
             self.draw()
             self.redraw()
 
-    def on_press(self):
+    def on_press(self, *args):
         if PLACE:
             self.place = not self.place
             self.draw()
             self.redraw()
         elif CONNECT:
             DRAGGING = True
+            # Will set Connection FROM NEURON
+            # print (self.mousePos)
             print (DRAGGING)
 
 
@@ -158,6 +160,7 @@ class Neuron(ButtonBehavior, Widget):
         if CONNECT:
             DRAGGING = False
             print (DRAGGING)
+            # Will set Connection TO NEURON
 
 
     def updateNeuron(self):
