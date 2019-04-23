@@ -277,7 +277,8 @@ class wip017(App):
         grid._gridSize + 1, min=2, max=20, errorvalue=2)
     _play = False
     _connect = False
-    _event = None
+    _playStopEvent = None
+    _connectEvent = None
     _FPS = BoundedNumericProperty(
         24, min=1, max=120, errorvalue=1)
 
@@ -304,10 +305,10 @@ class wip017(App):
     def playStop(self):
         self._play = not self._play
         if self._play == True:
-            self._event = Clock.schedule_interval(self.updateNeurons,
+            self._playStopEvent = Clock.schedule_interval(self.updateNeurons,
                                                   1 / self._FPS)
         else:
-            Clock.unschedule(self._event)
+            Clock.unschedule(self._playStopEvent)
 
     def updateNeurons(self, *args):
         for neuron in NEURON_LIST:
@@ -318,6 +319,14 @@ class wip017(App):
         CONNECT = not CONNECT
         if PLACE == True:
             PLACE = False
+        if CONNECT == True:
+            self._connectEvent = Clock.schedule_interval(self.updateConnect,
+                                                  1 / 30)
+        else:
+            Clock.unschedule(self._connectEvent)
+
+    def updateConnect(self, *args):
+        pass
 
     def togglePlace(self):
         global CONNECT, PLACE
