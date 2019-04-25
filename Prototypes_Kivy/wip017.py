@@ -48,6 +48,10 @@ CONNECT = False
 DRAGGING = False
 
 
+FROMNEURON = None
+TONEURON = None
+
+
 '''
 
 TODO:
@@ -180,8 +184,10 @@ class gridNeuronsWidget(Widget):
         self.bind(size=self.draw)
         self.gridLayer = BoxLayout(opacity=1)
         self.neuronLayer = Widget(opacity=1)
+        self.connectLayer = Widget(opacity=1) #n
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
+        self.add_widget(self.connectLayer) #n
         self._gridSize = 5
         self._neuronSize = 60
         self.initNeurons()
