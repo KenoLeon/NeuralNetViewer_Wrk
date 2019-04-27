@@ -10,7 +10,10 @@ class MousePosDemo(BoxLayout):
 
     def __init__(self, **kwargs):
         super(MousePosDemo, self).__init__(**kwargs)
+
         Window.bind(mouse_pos=self.mouse_pos)
+        # Window.bind(on_motion=self.on_motion)
+
         self.bind(pos=self.draw)
         self.bind(size=self.draw)
         self.layout1 = BoxLayout(opacity=1)
@@ -20,7 +23,6 @@ class MousePosDemo(BoxLayout):
 
     def draw(self, *args):
 
-
         self.layout1.canvas.clear()
         with self.canvas.before:
             Color(0.6, 0.6, 0.6, 1)
@@ -29,11 +31,15 @@ class MousePosDemo(BoxLayout):
     def mouse_pos(self, window, pos):
         self.label.text = str(pos)
 
+    # def on_motion(self, obj, etype, me):
+    #     pass
+    #     # self.label.text = str(me.pos)
 
+    def on_touch_down(self, event):
+        self.label.text = "touch DOWN: " + str(event.pos)
 
-
-
-
+    def on_touch_up(self, event):
+        self.label.text = "touch UP: " + str(event.pos)
 
 
 class TestApp(App):
