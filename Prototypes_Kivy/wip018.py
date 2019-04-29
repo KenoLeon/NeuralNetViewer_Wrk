@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-NNV - wip 017:
+NNV - wip 018:
 
 Resizable Grid with neurons, hover,place and Animation
 
@@ -46,7 +46,8 @@ RED = [1, 0, 0]
 PLACE = True
 CONNECT = False
 DRAGGING = False
-
+DRAG_START = ()
+DRAG_END = ()
 
 FROMNEURON = None
 TONEURON = None
@@ -59,9 +60,6 @@ TODO:
 Connections:
 
 DRAG LINE/CONNECT :
-
-- DRAG NOT DRAG BEHAVIOR xxx
-- WHERE TO DRAW CONNECTIONS ?, NEW LAYER ?
 
 To refinements.
 To next spec.
@@ -148,22 +146,23 @@ class Neuron(ButtonBehavior, Widget):
             self.draw()
             self.redraw()
 
-    def on_press(self, *args):
+    def on_press(self):
+        global DRAGGING, DRAG_START
         if PLACE:
             self.place = not self.place
             self.draw()
             self.redraw()
-        elif CONNECT:
+        elif CONNECT and self.place:
             DRAGGING = True
-            # Will set Connection FROM NEURON
-            # print (self.mousePos)
-            print (DRAGGING)
+            DRAG_START = self.mousePos
+            print ('START DRAG')
 
 
     def on_release(self):
+        global DRAGGING, DRAG_START
         if CONNECT:
             DRAGGING = False
-            print (DRAGGING)
+            print ('STOP DRAG')
             # Will set Connection TO NEURON
 
 
@@ -180,6 +179,7 @@ class Neuron(ButtonBehavior, Widget):
 class gridNeuronsWidget(Widget):
     def __init__(self, *args, **kwargs):
         Widget.__init__(self, *args, **kwargs)
+        Window.bind(mouse_pos=self.mouse_pos)
         self.bind(pos=self.draw)
         self.bind(size=self.draw)
         self.gridLayer = BoxLayout(opacity=1)
@@ -191,6 +191,10 @@ class gridNeuronsWidget(Widget):
         self._gridSize = 5
         self._neuronSize = 60
         self.initNeurons()
+
+    def mouse_pos(self, window, pos):
+        if CONNECT and DRAGGING:
+            self.drawLine(pos)
 
     def initNeurons(self):
         for i in range(self._gridSize + 1):
@@ -211,6 +215,14 @@ class gridNeuronsWidget(Widget):
         self.removeNeurons()
         self.initNeurons()
         self.draw()
+
+
+    def drawLine(self, mPos):
+        self.connectLayer.canvas.clear()
+        with self.connectLayer.canvas:
+            Color(1, 1, 1, 1)
+            Line(points=[DRAG_START[0], DRAG_START[1], mPos[0], mPos[1]], width=0.8)
+
 
     def draw(self, *args, **kwargs):
         # method vars :
@@ -275,9 +287,9 @@ class gridNeuronsWidget(Widget):
                     nC += 1
 
 
-class wip017(App):
+class wip018(App):
     # APP VARS:
-    title = "NNV - wip017"
+    title = "NNV - wip018"
     grid = gridNeuronsWidget()
     gridSize = BoundedNumericProperty(
         grid._gridSize + 1, min=2, max=20, errorvalue=2)
@@ -325,14 +337,6 @@ class wip017(App):
         CONNECT = not CONNECT
         if PLACE == True:
             PLACE = False
-        if CONNECT == True:
-            self._connectEvent = Clock.schedule_interval(self.updateConnect,
-                                                  1 / 30)
-        else:
-            Clock.unschedule(self._connectEvent)
-
-    def updateConnect(self, *args):
-        print ('will Update connection')
 
     def togglePlace(self):
         global CONNECT, PLACE
@@ -362,4 +366,4 @@ class wip017(App):
 
 
 if __name__ == "__main__":
-    wip017().run()
+    wip018().run()
