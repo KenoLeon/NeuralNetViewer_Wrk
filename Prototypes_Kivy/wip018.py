@@ -55,11 +55,24 @@ TONEURON = None
 
 '''
 
-TODO:
+TODO :
 
 Connections:
 
-DRAG LINE/CONNECT :
+DRAG LINE/CONNECT:
+
+- From Neuron outside neuron....
+- on_release if target neuron, add Connection
+- Draw connections
+
+
+- BUGS:
+- On gridSize remove connections
+
+DONE:
+- DRAGSTART center of neuron XXX
+- Button toggles are buggy :( XXX
+
 
 To refinements.
 To next spec.
@@ -140,6 +153,10 @@ class Neuron(ButtonBehavior, Widget):
                     self.outline = Ellipse()
                     Color(*SOMA_COLOR)
                     self.soma = Ellipse()
+
+            if self.place and CONNECT and DRAGGING:
+                print ('I might be a target !')
+
             self.redraw()
         else:
             Window.set_system_cursor('arrow')
@@ -154,7 +171,7 @@ class Neuron(ButtonBehavior, Widget):
             self.redraw()
         elif CONNECT and self.place:
             DRAGGING = True
-            DRAG_START = self.mousePos
+            DRAG_START = self.center
             print ('START DRAG')
 
 
@@ -337,11 +354,18 @@ class wip018(App):
         CONNECT = not CONNECT
         if PLACE == True:
             PLACE = False
+        if CONNECT == True:
+            Window.set_system_cursor('crosshair')
+
 
     def togglePlace(self):
         global CONNECT, PLACE
         PLACE = not PLACE
-        CONNECT = not CONNECT
+        if CONNECT == True:
+            CONNECT = False
+        if PLACE == True:
+            Window.set_system_cursor('hand')
+
 
     def build(self):
         root = BoxLayout()
