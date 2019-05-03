@@ -8,8 +8,10 @@ Resizable Grid with neurons, hover,place and Animation
 
 from kivy.config import Config
 # Window :
-Config.set('graphics', 'width', '1200')
-Config.set('graphics', 'height', '600')
+Config.set('graphics','window_state', 'maximized')
+# Debug :
+# Config.set('graphics', 'width', '1200')
+# Config.set('graphics', 'height', '600')
 
 from kivy.core.window import Window
 import os
@@ -61,6 +63,7 @@ Connections:
 
 DRAG LINE/CONNECT:
 
+
 - From Neuron outside neuron....
 - on_release if target neuron, add Connection
 - Draw connections
@@ -70,6 +73,7 @@ DRAG LINE/CONNECT:
 - On gridSize remove connections
 
 DONE:
+- Get Object XXX
 - DRAGSTART center of neuron XXX
 - Button toggles are buggy :( XXX
 
@@ -78,7 +82,6 @@ To refinements.
 To next spec.
 
 '''
-
 
 class Neuron(ButtonBehavior, Widget):
 
@@ -154,8 +157,9 @@ class Neuron(ButtonBehavior, Widget):
                     Color(*SOMA_COLOR)
                     self.soma = Ellipse()
 
-            if self.place and CONNECT and DRAGGING:
-                print ('I might be a target !')
+            # if self.place and CONNECT and DRAGGING:
+                # print ('I might be a target !')
+                # print (self)
 
             self.redraw()
         else:
@@ -179,8 +183,7 @@ class Neuron(ButtonBehavior, Widget):
         global DRAGGING, DRAG_START
         if CONNECT:
             DRAGGING = False
-            print ('STOP DRAG')
-            # Will set Connection TO NEURON
+            self.parent.parent.addConnection()
 
 
     def updateNeuron(self):
@@ -191,6 +194,15 @@ class Neuron(ButtonBehavior, Widget):
             elif self.baseNTLevel >= 1:
                 self.redraw()
                 self.baseNTLevel = 0
+
+
+
+    # def on_connect(self, *args):
+    #     pass
+
+
+class Connection():
+    pass
 
 
 class gridNeuronsWidget(Widget):
@@ -208,6 +220,9 @@ class gridNeuronsWidget(Widget):
         self._gridSize = 5
         self._neuronSize = 60
         self.initNeurons()
+
+    def addConnection(self):
+            print('Will add connection')
 
     def mouse_pos(self, window, pos):
         if CONNECT and DRAGGING:
@@ -302,7 +317,6 @@ class gridNeuronsWidget(Widget):
                     NEURON_LIST[nC].size = [self.neuronSize, self.neuronSize]
                     NEURON_LIST[nC].pos = pos
                     nC += 1
-
 
 class wip018(App):
     # APP VARS:
