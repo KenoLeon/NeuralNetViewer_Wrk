@@ -13,6 +13,7 @@ Config.set('graphics','window_state', 'maximized')
 # Config.set('graphics', 'width', '1200')
 # Config.set('graphics', 'height', '600')
 
+
 from kivy.core.window import Window
 import os
 import math
@@ -35,7 +36,7 @@ from kivy.clock import Clock
 XMARGIN = 60
 YMARGIN = 60
 OUTLINE_WIDTH = 2
-NEURON_LIST = []
+
 
 # COLORS:
 BACKGROUND_COLOR = SOMA_COLOR = [0.1, 0.1, 0.1]
@@ -52,8 +53,9 @@ DRAG_START = ()
 DRAG_END = ()
 
 FROMNEURON = None
-TONEURON = None
-
+TARGETNEURON = None
+NEURON_LIST = []
+CONNECTION_LIST = []
 
 '''
 
@@ -63,16 +65,15 @@ Connections:
 
 DRAG LINE/CONNECT:
 
-
-- From Neuron outside neuron....
-- on_release if target neuron, add Connection
+- New connection object
 - Draw connections
-
 
 - BUGS:
 - On gridSize remove connections
 
 DONE:
+- on_release if target neuron, add Connection XXX
+- from Neuron target Neuron XXX
 - Get Object XXX
 - DRAGSTART center of neuron XXX
 - Button toggles are buggy :( XXX
@@ -82,6 +83,20 @@ To refinements.
 To next spec.
 
 '''
+
+# TODO:
+    # - convert to: KIVY Widget
+    # - draw Methods
+    # - resize Methods
+
+
+class Connection():
+    def __init__(self, fromNeuron, toNeuron):
+        self.fromNeuron = fromNeuron
+        self.toNeuron = toNeuron
+
+
+
 
 class Neuron(ButtonBehavior, Widget):
 
@@ -138,6 +153,7 @@ class Neuron(ButtonBehavior, Widget):
         self.outline.size = sizeO
 
     def on_mouse_pos(self, *args):
+        global TARGETNEURON
 
         self.mousePos = args[1]
         inside = self.collide_point(*self.to_widget(*self.mousePos))
@@ -157,9 +173,8 @@ class Neuron(ButtonBehavior, Widget):
                     Color(*SOMA_COLOR)
                     self.soma = Ellipse()
 
-            # if self.place and CONNECT and DRAGGING:
-                # print ('I might be a target !')
-                # print (self)
+            if self.place and CONNECT and DRAGGING:
+                TARGETNEURON = self
 
             self.redraw()
         else:
@@ -168,7 +183,7 @@ class Neuron(ButtonBehavior, Widget):
             self.redraw()
 
     def on_press(self):
-        global DRAGGING, DRAG_START
+        global DRAGGING, DRAG_START, FROMNEURON
         if PLACE:
             self.place = not self.place
             self.draw()
@@ -176,7 +191,8 @@ class Neuron(ButtonBehavior, Widget):
         elif CONNECT and self.place:
             DRAGGING = True
             DRAG_START = self.center
-            print ('START DRAG')
+            FROMNEURON = self
+            # print ('START DRAG')
 
 
     def on_release(self):
@@ -196,15 +212,6 @@ class Neuron(ButtonBehavior, Widget):
                 self.baseNTLevel = 0
 
 
-
-    # def on_connect(self, *args):
-    #     pass
-
-
-class Connection():
-    pass
-
-
 class gridNeuronsWidget(Widget):
     def __init__(self, *args, **kwargs):
         Widget.__init__(self, *args, **kwargs)
@@ -213,16 +220,23 @@ class gridNeuronsWidget(Widget):
         self.bind(size=self.draw)
         self.gridLayer = BoxLayout(opacity=1)
         self.neuronLayer = Widget(opacity=1)
-        self.connectLayer = Widget(opacity=1) #n
+        self.connectionsLayer = Widget(opacity=1) #n
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
-        self.add_widget(self.connectLayer) #n
+        self.add_widget(self.connectionsLayer) #n
         self._gridSize = 5
         self._neuronSize = 60
         self.initNeurons()
 
     def addConnection(self):
             print('Will add connection')
+            print (FROMNEURON.pos)
+            print (TARGETNEURON.pos)
+            newCon = Connection(FROMNEURON, TARGETNEURON)
+            CONNECTION_LIST.append(newCon)
+            print(CONNECTION_LIST)
+
+
 
     def mouse_pos(self, window, pos):
         if CONNECT and DRAGGING:
@@ -250,8 +264,8 @@ class gridNeuronsWidget(Widget):
 
 
     def drawLine(self, mPos):
-        self.connectLayer.canvas.clear()
-        with self.connectLayer.canvas:
+        self.connectionsLayer.canvas.clear()
+        with self.connectionsLayer.canvas:
             Color(1, 1, 1, 1)
             Line(points=[DRAG_START[0], DRAG_START[1], mPos[0], mPos[1]], width=0.8)
 
