@@ -61,15 +61,12 @@ CONNECTION_LIST = []
 
 TODO :
 
-Connections:
+Connections.
 
-DRAG LINE/CONNECT:
-
-- New connection object
-- Draw connections
 
 - BUGS:
 - On gridSize remove connections
+- on Click without neurons crash.
 
 DONE:
 - on_release if target neuron, add Connection XXX
@@ -77,26 +74,35 @@ DONE:
 - Get Object XXX
 - DRAGSTART center of neuron XXX
 - Button toggles are buggy :( XXX
-
+- New connection object XXX
 
 To refinements.
 To next spec.
 
 '''
 
-# TODO:
-    # - convert to: KIVY Widget
-    # - draw Methods
-    # - resize Methods
+# TODO ( week 3 ):
+
+    # - Resize methods.
+    # - Draw all connections, loop logic in grid.
+    # - Don't connect if self or not place.
+    # - Don't crash on missing neuron.
+    # - Outside Dot
+    # - Affect neurons
 
 
-class Connection():
-    def __init__(self, fromNeuron, toNeuron):
-        self.fromNeuron = fromNeuron
-        self.toNeuron = toNeuron
+class Connection(Widget):
+    def __init__(self,**kwargs):
+        self.fromNeuron = kwargs.get('fromNeuron')
+        self.targetNeuron = kwargs.get('targetNeuron')
+        super().__init__()
+        self.draw()
 
-
-
+    def draw(self):
+        self.canvas.clear()
+        with self.canvas:
+            Color(*RED)
+            Line(points=[self.fromNeuron.center,self.targetNeuron.center], width=0.8)
 
 class Neuron(ButtonBehavior, Widget):
 
@@ -229,14 +235,10 @@ class gridNeuronsWidget(Widget):
         self.initNeurons()
 
     def addConnection(self):
-            print('Will add connection')
-            print (FROMNEURON.pos)
-            print (TARGETNEURON.pos)
-            newCon = Connection(FROMNEURON, TARGETNEURON)
+            self.connectionsLayer.canvas.clear()
+            newCon = Connection(fromNeuron = FROMNEURON, targetNeuron = TARGETNEURON)
             CONNECTION_LIST.append(newCon)
-            print(CONNECTION_LIST)
-
-
+            self.connectionsLayer.add_widget(newCon)
 
     def mouse_pos(self, window, pos):
         if CONNECT and DRAGGING:
