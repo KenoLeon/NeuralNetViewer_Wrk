@@ -8,10 +8,10 @@ Resizable Grid with neurons, hover,place and Animation
 
 from kivy.config import Config
 # Window :
-Config.set('graphics','window_state', 'maximized')
+# Config.set('graphics','window_state', 'maximized')
 # Debug :
-# Config.set('graphics', 'width', '1200')
-# Config.set('graphics', 'height', '600')
+Config.set('graphics', 'width', '1200')
+Config.set('graphics', 'height', '600')
 
 
 from kivy.core.window import Window
@@ -95,14 +95,21 @@ class Connection(Widget):
     def __init__(self,**kwargs):
         self.fromNeuron = kwargs.get('fromNeuron')
         self.targetNeuron = kwargs.get('targetNeuron')
-        super().__init__()
+        super(Connection, self).__init__()
+        # self.bind(pos=self.redraw)
         self.draw()
+
 
     def draw(self):
         self.canvas.clear()
         with self.canvas:
             Color(*RED)
             Line(points=[self.fromNeuron.center,self.targetNeuron.center], width=0.8)
+        # print ('connection position')
+        # print(self.pos)
+
+    def redraw(self, *args):
+        print ('wil redraw connection')
 
 class Neuron(ButtonBehavior, Widget):
 
@@ -226,10 +233,10 @@ class gridNeuronsWidget(Widget):
         self.bind(size=self.draw)
         self.gridLayer = BoxLayout(opacity=1)
         self.neuronLayer = Widget(opacity=1)
-        self.connectionsLayer = Widget(opacity=1) #n
+        self.connectionsLayer = Widget(opacity=1)
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
-        self.add_widget(self.connectionsLayer) #n
+        self.add_widget(self.connectionsLayer)
         self._gridSize = 5
         self._neuronSize = 60
         self.initNeurons()
@@ -239,6 +246,7 @@ class gridNeuronsWidget(Widget):
             newCon = Connection(fromNeuron = FROMNEURON, targetNeuron = TARGETNEURON)
             CONNECTION_LIST.append(newCon)
             self.connectionsLayer.add_widget(newCon)
+            self.draw()
 
     def mouse_pos(self, window, pos):
         if CONNECT and DRAGGING:
@@ -325,6 +333,8 @@ class gridNeuronsWidget(Widget):
                     width=1)
 
             nC = 0
+            # Update Neurons:
+
             for i in range(self._gridSize + 1):
                 for ii in range(self._gridSize + 1):
                     pos = (int(XMARGIN + (i * STEP) + offsetY -
@@ -333,6 +343,13 @@ class gridNeuronsWidget(Widget):
                     NEURON_LIST[nC].size = [self.neuronSize, self.neuronSize]
                     NEURON_LIST[nC].pos = pos
                     nC += 1
+
+            # Update Connections:
+            # self.connectionsLayer.canvas.clear() NN tiddy Objects
+            for connection in CONNECTION_LIST:
+                connection.draw()
+
+
 
 class wip018(App):
     # APP VARS:
