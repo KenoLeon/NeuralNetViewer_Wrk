@@ -67,14 +67,18 @@ Connections.
 - BUGS:
 - On gridSize remove connections
 - on Click without neurons crash.
+- Connections list called while empty.
 
 DONE:
+
 - on_release if target neuron, add Connection XXX
 - from Neuron target Neuron XXX
 - Get Object XXX
 - DRAGSTART center of neuron XXX
 - Button toggles are buggy :( XXX
 - New connection object XXX
+- Resize methods. XXX
+- Draw all connections, loop logic in grid. XXX
 
 To refinements.
 To next spec.
@@ -83,8 +87,6 @@ To next spec.
 
 # TODO ( week 3 ):
 
-    # - Resize methods.
-    # - Draw all connections, loop logic in grid.
     # - Don't connect if self or not place.
     # - Don't crash on missing neuron.
     # - Outside Dot
@@ -96,20 +98,17 @@ class Connection(Widget):
         self.fromNeuron = kwargs.get('fromNeuron')
         self.targetNeuron = kwargs.get('targetNeuron')
         super(Connection, self).__init__()
-        # self.bind(pos=self.redraw)
         self.draw()
 
 
     def draw(self):
+        fromNeuron = self.fromNeuron.center
+        targetNeuron = self.targetNeuron.center
         self.canvas.clear()
         with self.canvas:
             Color(*RED)
-            Line(points=[self.fromNeuron.center,self.targetNeuron.center], width=0.8)
-        # print ('connection position')
-        # print(self.pos)
+            Line(points=[fromNeuron,targetNeuron], width=0.8)
 
-    def redraw(self, *args):
-        print ('wil redraw connection')
 
 class Neuron(ButtonBehavior, Widget):
 
@@ -205,7 +204,6 @@ class Neuron(ButtonBehavior, Widget):
             DRAGGING = True
             DRAG_START = self.center
             FROMNEURON = self
-            # print ('START DRAG')
 
 
     def on_release(self):
@@ -233,20 +231,21 @@ class gridNeuronsWidget(Widget):
         self.bind(size=self.draw)
         self.gridLayer = BoxLayout(opacity=1)
         self.neuronLayer = Widget(opacity=1)
+        self.drawLayer = Widget(opacity=1)
         self.connectionsLayer = Widget(opacity=1)
         self.add_widget(self.gridLayer)
         self.add_widget(self.neuronLayer)
+        self.add_widget(self.drawLayer)
         self.add_widget(self.connectionsLayer)
         self._gridSize = 5
         self._neuronSize = 60
         self.initNeurons()
 
     def addConnection(self):
-            self.connectionsLayer.canvas.clear()
             newCon = Connection(fromNeuron = FROMNEURON, targetNeuron = TARGETNEURON)
             CONNECTION_LIST.append(newCon)
             self.connectionsLayer.add_widget(newCon)
-            self.draw()
+            self.drawLayer.canvas.clear()
 
     def mouse_pos(self, window, pos):
         if CONNECT and DRAGGING:
@@ -274,8 +273,8 @@ class gridNeuronsWidget(Widget):
 
 
     def drawLine(self, mPos):
-        self.connectionsLayer.canvas.clear()
-        with self.connectionsLayer.canvas:
+        self.drawLayer.canvas.clear()
+        with self.drawLayer.canvas:
             Color(1, 1, 1, 1)
             Line(points=[DRAG_START[0], DRAG_START[1], mPos[0], mPos[1]], width=0.8)
 
@@ -299,6 +298,8 @@ class gridNeuronsWidget(Widget):
         with self.canvas.before:
             Color(*BACKGROUND_COLOR)
             self.bg = Rectangle(pos=self.pos, size=self.size)
+
+
         # GRID:
         self.gridLayer.canvas.clear()
         with self.gridLayer.canvas:
@@ -344,12 +345,10 @@ class gridNeuronsWidget(Widget):
                     NEURON_LIST[nC].pos = pos
                     nC += 1
 
-            # Update Connections:
-            # self.connectionsLayer.canvas.clear() NN tiddy Objects
-            for connection in CONNECTION_LIST:
-                connection.draw()
-
-
+        # Connections:
+        # Draw order is important Grid->Neurons->Connections
+        for connection in CONNECTION_LIST:
+            connection.draw()
 
 class wip018(App):
     # APP VARS:
