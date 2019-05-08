@@ -17,6 +17,7 @@ Config.set('graphics','window_state', 'maximized')
 from kivy.core.window import Window
 import os
 import math
+from math import atan2, cos, sin
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
@@ -59,20 +60,22 @@ CONNECTION_LIST = []
 
 '''
 
-- Mantra: Fix bug when encounter it, or document it properly.
-
 Connections.
 # TODO ( week 3 ):
 
- - After grid resize, go back to place neurons.
- - Outside Dot.
- - Clear all
+ - Add Marker
  - Affect neurons.
+ - Clear all
+ - Remove Connection
+
+
 
 BUGS:
 - Connections list called while empty ?
+- After grid resize, go back to place neurons.
 
 DONE:
+- Outside to Outside Line XXX
 - Connection is made if cancelled DRAG. XXX
 - Connection is made when no target neuron. XXX
 - on Click without neurons crash. XXX
@@ -97,17 +100,56 @@ class Connection(Widget):
     def __init__(self,**kwargs):
         self.fromNeuron = kwargs.get('fromNeuron')
         self.targetNeuron = kwargs.get('targetNeuron')
+        self.neuronSize = self.fromNeuron.width
+
         super(Connection, self).__init__()
         self.draw()
+        print('neuronSize' + str(self.neuronSize) )
 
 
-    def draw(self):
+    # self.markerSize = 3
+    # self.inputNeuronPos = inputNeuronPos
+    # self.targetNeuronPos = targetNeuronPos
+    # self.fromNeuron = fromNeuron
+    # self.toNeuron = toNeuron
+
+    # self.angle = atan2((targetNeuronPos[1] - inputNeuronPos[1]),
+    #                    (targetNeuronPos[0] - inputNeuronPos[0]))
+    # self.fromX = inputNeuronPos[0] + NEURONSIZE * cos(self.angle)
+    # self.fromY = inputNeuronPos[1] + NEURONSIZE * sin(self.angle)
+    # self.toX = targetNeuronPos[0] - NEURONSIZE * cos(self.angle)
+    # self.toY = targetNeuronPos[1] - NEURONSIZE * sin(self.angle)
+
+# self.markerX = int(targetNeuronPos[0] -
+#                    (NEURONSIZE + self.markerSize) * cos(self.angle))
+# self.markerY = int(targetNeuronPos[1] -
+#                    (NEURONSIZE + self.markerSize) * sin(self.angle))
+# self._rect = pygame.draw.line(DISPLAYSURF, GREY,
+#                               (self.fromX, self.fromY),
+#                               (self.toX, self.toY), 3)
+
+
+    def draw(self, *args):
+
         fromNeuron = self.fromNeuron.center
         targetNeuron = self.targetNeuron.center
+        neuronSize = (self.fromNeuron.width/2)+2
+
+        angle = atan2((targetNeuron[1] - fromNeuron[1]),
+                           (targetNeuron[0] - fromNeuron[0]))
+        fromX = fromNeuron[0] + neuronSize * cos(angle)
+        fromY = fromNeuron[1] + neuronSize * sin(angle)
+        toX = targetNeuron[0] - neuronSize * cos(angle)
+        toY = targetNeuron[1] - neuronSize * sin(angle)
+
+
+
+        # for arg in args:
+        #     print("another arg through *argv:", args)
         self.canvas.clear()
         with self.canvas:
             Color(*RED)
-            Line(points=[fromNeuron,targetNeuron], width=0.8)
+            Line(points=[(fromX,fromY),(toX, toY)], width=0.8)
 
 
 class Neuron(ButtonBehavior, Widget):
@@ -125,7 +167,7 @@ class Neuron(ButtonBehavior, Widget):
         Window.bind(mouse_pos=self.on_mouse_pos)
         self.ntRelease = 0.1
 
-    def draw(self):
+    def draw(self, **kwargs):
         self.canvas.clear()
         if not self.place:
             with self.canvas:
@@ -359,6 +401,7 @@ class gridNeuronsWidget(Widget):
         # Draw order is important Grid->Neurons->Connections
         for connection in CONNECTION_LIST:
             connection.draw()
+            # connection.draw(int(self.neuronSize))
 
 class wip018(App):
     # APP VARS:
