@@ -8,10 +8,10 @@ Resizable Grid with neurons, hover,place and Animation
 
 from kivy.config import Config
 # Window :
-# Config.set('graphics','window_state', 'maximized')
+Config.set('graphics','window_state', 'maximized')
 # Debug :
-Config.set('graphics', 'width', '1200')
-Config.set('graphics', 'height', '600')
+# Config.set('graphics', 'width', '1200')
+# Config.set('graphics', 'height', '600')
 
 
 from kivy.core.window import Window
@@ -59,18 +59,25 @@ CONNECTION_LIST = []
 
 '''
 
-TODO :
+- Mantra: Fix bug when encounter it, or document it properly.
 
 Connections.
+# TODO ( week 3 ):
 
+ - After grid resize, go back to place neurons.
+ - Outside Dot.
+ - Clear all
+ - Affect neurons.
 
-- BUGS:
-- On gridSize remove connections
-- on Click without neurons crash.
-- Connections list called while empty.
+BUGS:
+- Connections list called while empty ?
 
 DONE:
-
+- Connection is made if cancelled DRAG. XXX
+- Connection is made when no target neuron. XXX
+- on Click without neurons crash. XXX
+- Don't connect if self or not place. XXX
+- On gridSize remove connections. XXX
 - on_release if target neuron, add Connection XXX
 - from Neuron target Neuron XXX
 - Get Object XXX
@@ -84,13 +91,6 @@ To refinements.
 To next spec.
 
 '''
-
-# TODO ( week 3 ):
-
-    # - Don't connect if self or not place.
-    # - Don't crash on missing neuron.
-    # - Outside Dot
-    # - Affect neurons
 
 
 class Connection(Widget):
@@ -190,12 +190,14 @@ class Neuron(ButtonBehavior, Widget):
 
             self.redraw()
         else:
+            TARGETNEURON = None
             Window.set_system_cursor('arrow')
             self.draw()
             self.redraw()
 
     def on_press(self):
-        global DRAGGING, DRAG_START, FROMNEURON
+        global DRAGGING, DRAG_START, FROMNEURON, TARGETNEURON
+        TARGETNEURON = None
         if PLACE:
             self.place = not self.place
             self.draw()
@@ -242,10 +244,11 @@ class gridNeuronsWidget(Widget):
         self.initNeurons()
 
     def addConnection(self):
+        self.drawLayer.canvas.clear()
+        if FROMNEURON != TARGETNEURON and TARGETNEURON != None:
             newCon = Connection(fromNeuron = FROMNEURON, targetNeuron = TARGETNEURON)
             CONNECTION_LIST.append(newCon)
             self.connectionsLayer.add_widget(newCon)
-            self.drawLayer.canvas.clear()
 
     def mouse_pos(self, window, pos):
         if CONNECT and DRAGGING:
@@ -263,12 +266,19 @@ class gridNeuronsWidget(Widget):
             self.neuronLayer.remove_widget(neuron)
         NEURON_LIST.clear()
 
+    def removeConnections(self, *args, **kwargs):
+        for connection in CONNECTION_LIST:
+            self.connectionsLayer.remove_widget(connection)
+        CONNECTION_LIST.clear()
+
+
     def reInitGrid(self, *args, **kwargs):
         _gridSize = kwargs.get('_gridSize', self._gridSize)
         if (_gridSize):
             self._gridSize = _gridSize
         self.removeNeurons()
         self.initNeurons()
+        self.removeConnections()
         self.draw()
 
 
