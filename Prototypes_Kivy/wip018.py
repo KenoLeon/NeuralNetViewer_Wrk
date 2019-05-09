@@ -55,15 +55,10 @@ FROMNEURON = None
 TARGETNEURON = None
 NEURON_LIST = []
 CONNECTION_LIST = []
-'''
 
+'''
 Connections.
 # TODO ( week 3 ):
-
- - Add Marker ...
- - Add triangular (arrow marker) ...
-
-
  - Affect neurons.
  - Clear all
  - Remove Connection
@@ -73,6 +68,9 @@ BUGS:
 - After grid resize, go back to place neurons.
 
 DONE:
+
+- Add Marker XXX
+- Add triangular (arrow marker) XXX
 - Outside to Outside Line XXX
 - Connection is made if cancelled DRAG. XXX
 - Connection is made when no target neuron. XXX
@@ -94,7 +92,7 @@ To next spec.
 '''
 
 
-class Connection(Widget):
+class Connection(ButtonBehavior, Widget):
     def __init__(self, **kwargs):
         self.fromNeuron = kwargs.get('fromNeuron')
         self.targetNeuron = kwargs.get('targetNeuron')
@@ -107,25 +105,24 @@ class Connection(Widget):
         fromNeuron = self.fromNeuron.center
         targetNeuron = self.targetNeuron.center
         neuronSize = (self.fromNeuron.width / 2) + 2
-        markerSize = 10
+        markerSize = 6
 
         angle = atan2((targetNeuron[1] - fromNeuron[1]),
                       (targetNeuron[0] - fromNeuron[0]))
         fromX = fromNeuron[0] + neuronSize * cos(angle)
         fromY = fromNeuron[1] + neuronSize * sin(angle)
-        toX = targetNeuron[0] - neuronSize * cos(angle)
-        toY = targetNeuron[1] - neuronSize * sin(angle)
+        toX = targetNeuron[0] - (neuronSize + markerSize)* cos(angle)
+        toY = targetNeuron[1] - (neuronSize + markerSize) * sin(angle)
 
-        # markerX = int(targetNeuron[0] - (neuronSize + markerSize) * cos(angle))
-        # markerY = int(targetNeuron[1] - (neuronSize + markerSize) * sin(angle))
-        # triangleX2 = int(toX - markerSize * cos(angle))
-        # triangleY2 = int(toY + markerSize * sin(angle))
-        # triangleX3 = int(toX - markerSize * cos(angle))
-        # triangleY3 = int(toY + markerSize * sin(angle))
-        # triangleX3 = markerX
-        # triangleY3 = markerY
-        # Triangle(points=[0,0, 100,100, 200,0])
 
+        # Arrow marker...POINTS (arrow0, arrow1, arro2):
+        rotation = math.degrees(math.atan2(fromY-toY, toX-fromX))+90
+        arrow0_X = (toX+markerSize*math.sin(math.radians(rotation)))
+        arrow0_Y = (toY+markerSize*math.cos(math.radians(rotation)))
+        arrow1_X = (toX+markerSize*math.sin(math.radians(rotation-120)))
+        arrow1_Y = (toY+markerSize*math.cos(math.radians(rotation-120)))
+        arrow2_X = (toX+markerSize*math.sin(math.radians(rotation+120)))
+        arrow2_Y = (toY+markerSize*math.cos(math.radians(rotation+120)))
 
 
         self.canvas.clear()
@@ -134,7 +131,7 @@ class Connection(Widget):
             Line(points=[(fromX, fromY), (toX, toY)], width=0.8)
             # Line(circle =(markerX, markerY, markerSize))
             # Ellipse(pos = [markerX, markerY], size = [markerSize, markerSize])
-            # Triangle(points=[toX,toY, cX,cY, dX,dY])
+            Triangle(points=[arrow0_X,arrow0_Y, arrow1_X,arrow1_Y, arrow2_X,arrow2_Y])
             # Line(points= [(toX, toY), (triangleX2, triangleY2), (triangleX3, triangleY3)], width =0.8)
 
 class Neuron(ButtonBehavior, Widget):
