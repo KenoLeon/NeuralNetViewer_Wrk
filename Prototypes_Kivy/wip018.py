@@ -8,16 +8,15 @@ Resizable Grid with neurons, hover,place and Animation
 
 from kivy.config import Config
 # Window :
-Config.set('graphics','window_state', 'maximized')
+Config.set('graphics', 'window_state', 'maximized')
 # Debug :
 # Config.set('graphics', 'width', '1200')
 # Config.set('graphics', 'height', '600')
 
-
 from kivy.core.window import Window
 import os
 import math
-from math import atan2, cos, sin
+from math import atan2, cos, sin, sqrt
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
@@ -38,7 +37,6 @@ XMARGIN = 60
 YMARGIN = 60
 OUTLINE_WIDTH = 2
 
-
 # COLORS:
 BACKGROUND_COLOR = SOMA_COLOR = [0.1, 0.1, 0.1]
 GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
@@ -57,18 +55,18 @@ FROMNEURON = None
 TARGETNEURON = None
 NEURON_LIST = []
 CONNECTION_LIST = []
-
 '''
 
 Connections.
 # TODO ( week 3 ):
 
- - Add Marker
+ - Add Marker ...
+ - Add triangular (arrow marker) ...
+
+
  - Affect neurons.
  - Clear all
  - Remove Connection
-
-
 
 BUGS:
 - Connections list called while empty ?
@@ -97,60 +95,47 @@ To next spec.
 
 
 class Connection(Widget):
-    def __init__(self,**kwargs):
+    def __init__(self, **kwargs):
         self.fromNeuron = kwargs.get('fromNeuron')
         self.targetNeuron = kwargs.get('targetNeuron')
         self.neuronSize = self.fromNeuron.width
-
         super(Connection, self).__init__()
         self.draw()
-        print('neuronSize' + str(self.neuronSize) )
-
-
-    # self.markerSize = 3
-    # self.inputNeuronPos = inputNeuronPos
-    # self.targetNeuronPos = targetNeuronPos
-    # self.fromNeuron = fromNeuron
-    # self.toNeuron = toNeuron
-
-    # self.angle = atan2((targetNeuronPos[1] - inputNeuronPos[1]),
-    #                    (targetNeuronPos[0] - inputNeuronPos[0]))
-    # self.fromX = inputNeuronPos[0] + NEURONSIZE * cos(self.angle)
-    # self.fromY = inputNeuronPos[1] + NEURONSIZE * sin(self.angle)
-    # self.toX = targetNeuronPos[0] - NEURONSIZE * cos(self.angle)
-    # self.toY = targetNeuronPos[1] - NEURONSIZE * sin(self.angle)
-
-# self.markerX = int(targetNeuronPos[0] -
-#                    (NEURONSIZE + self.markerSize) * cos(self.angle))
-# self.markerY = int(targetNeuronPos[1] -
-#                    (NEURONSIZE + self.markerSize) * sin(self.angle))
-# self._rect = pygame.draw.line(DISPLAYSURF, GREY,
-#                               (self.fromX, self.fromY),
-#                               (self.toX, self.toY), 3)
-
 
     def draw(self, *args):
 
         fromNeuron = self.fromNeuron.center
         targetNeuron = self.targetNeuron.center
-        neuronSize = (self.fromNeuron.width/2)+2
+        neuronSize = (self.fromNeuron.width / 2) + 2
+        markerSize = 10
 
         angle = atan2((targetNeuron[1] - fromNeuron[1]),
-                           (targetNeuron[0] - fromNeuron[0]))
+                      (targetNeuron[0] - fromNeuron[0]))
         fromX = fromNeuron[0] + neuronSize * cos(angle)
         fromY = fromNeuron[1] + neuronSize * sin(angle)
         toX = targetNeuron[0] - neuronSize * cos(angle)
         toY = targetNeuron[1] - neuronSize * sin(angle)
 
+        # markerX = int(targetNeuron[0] - (neuronSize + markerSize) * cos(angle))
+        # markerY = int(targetNeuron[1] - (neuronSize + markerSize) * sin(angle))
+        # triangleX2 = int(toX - markerSize * cos(angle))
+        # triangleY2 = int(toY + markerSize * sin(angle))
+        # triangleX3 = int(toX - markerSize * cos(angle))
+        # triangleY3 = int(toY + markerSize * sin(angle))
+        # triangleX3 = markerX
+        # triangleY3 = markerY
+        # Triangle(points=[0,0, 100,100, 200,0])
 
 
-        # for arg in args:
-        #     print("another arg through *argv:", args)
+
         self.canvas.clear()
         with self.canvas:
             Color(*RED)
-            Line(points=[(fromX,fromY),(toX, toY)], width=0.8)
-
+            Line(points=[(fromX, fromY), (toX, toY)], width=0.8)
+            # Line(circle =(markerX, markerY, markerSize))
+            # Ellipse(pos = [markerX, markerY], size = [markerSize, markerSize])
+            # Triangle(points=[toX,toY, cX,cY, dX,dY])
+            # Line(points= [(toX, toY), (triangleX2, triangleY2), (triangleX3, triangleY3)], width =0.8)
 
 class Neuron(ButtonBehavior, Widget):
 
@@ -249,13 +234,11 @@ class Neuron(ButtonBehavior, Widget):
             DRAG_START = self.center
             FROMNEURON = self
 
-
     def on_release(self):
         global DRAGGING, DRAG_START
         if CONNECT:
             DRAGGING = False
             self.parent.parent.addConnection()
-
 
     def updateNeuron(self):
         if self.place:
@@ -288,7 +271,8 @@ class gridNeuronsWidget(Widget):
     def addConnection(self):
         self.drawLayer.canvas.clear()
         if FROMNEURON != TARGETNEURON and TARGETNEURON != None:
-            newCon = Connection(fromNeuron = FROMNEURON, targetNeuron = TARGETNEURON)
+            newCon = Connection(
+                fromNeuron=FROMNEURON, targetNeuron=TARGETNEURON)
             CONNECTION_LIST.append(newCon)
             self.connectionsLayer.add_widget(newCon)
 
@@ -313,7 +297,6 @@ class gridNeuronsWidget(Widget):
             self.connectionsLayer.remove_widget(connection)
         CONNECTION_LIST.clear()
 
-
     def reInitGrid(self, *args, **kwargs):
         _gridSize = kwargs.get('_gridSize', self._gridSize)
         if (_gridSize):
@@ -323,13 +306,13 @@ class gridNeuronsWidget(Widget):
         self.removeConnections()
         self.draw()
 
-
     def drawLine(self, mPos):
         self.drawLayer.canvas.clear()
         with self.drawLayer.canvas:
             Color(1, 1, 1, 1)
-            Line(points=[DRAG_START[0], DRAG_START[1], mPos[0], mPos[1]], width=0.8)
-
+            Line(
+                points=[DRAG_START[0], DRAG_START[1], mPos[0], mPos[1]],
+                width=0.8)
 
     def draw(self, *args, **kwargs):
         # method vars :
@@ -350,7 +333,6 @@ class gridNeuronsWidget(Widget):
         with self.canvas.before:
             Color(*BACKGROUND_COLOR)
             self.bg = Rectangle(pos=self.pos, size=self.size)
-
 
         # GRID:
         self.gridLayer.canvas.clear()
@@ -403,6 +385,7 @@ class gridNeuronsWidget(Widget):
             connection.draw()
             # connection.draw(int(self.neuronSize))
 
+
 class wip018(App):
     # APP VARS:
     title = "NNV - wip018"
@@ -413,8 +396,7 @@ class wip018(App):
     _connect = False
     _playStopEvent = None
     _connectEvent = None
-    _FPS = BoundedNumericProperty(
-        24, min=1, max=120, errorvalue=1)
+    _FPS = BoundedNumericProperty(24, min=1, max=120, errorvalue=1)
 
     # APP Methods:
     def updateGrid(self, operation):
@@ -432,15 +414,14 @@ class wip018(App):
 
         if self._play == True:
             Clock.unschedule(self._playStopEvent)
-            self._playStopEvent = Clock.schedule_interval(self.updateNeurons,
-                                                  1 / self._FPS)
-
+            self._playStopEvent = Clock.schedule_interval(
+                self.updateNeurons, 1 / self._FPS)
 
     def playStop(self):
         self._play = not self._play
         if self._play == True:
-            self._playStopEvent = Clock.schedule_interval(self.updateNeurons,
-                                                  1 / self._FPS)
+            self._playStopEvent = Clock.schedule_interval(
+                self.updateNeurons, 1 / self._FPS)
         else:
             Clock.unschedule(self._playStopEvent)
 
@@ -456,7 +437,6 @@ class wip018(App):
         if CONNECT == True:
             Window.set_system_cursor('crosshair')
 
-
     def togglePlace(self):
         global CONNECT, PLACE
         PLACE = not PLACE
@@ -464,7 +444,6 @@ class wip018(App):
             CONNECT = False
         if PLACE == True:
             Window.set_system_cursor('hand')
-
 
     def build(self):
         root = BoxLayout()
