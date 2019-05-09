@@ -363,9 +363,8 @@ class gridNeuronsWidget(Widget):
                     ],
                     width=1)
 
-            nC = 0
             # Update Neurons:
-
+            nC = 0
             for i in range(self._gridSize + 1):
                 for ii in range(self._gridSize + 1):
                     pos = (int(XMARGIN + (i * STEP) + offsetY -
@@ -379,7 +378,6 @@ class gridNeuronsWidget(Widget):
         # Draw order is important Grid->Neurons->Connections
         for connection in CONNECTION_LIST:
             connection.draw()
-            # connection.draw(int(self.neuronSize))
 
 
 class wip018(App):
