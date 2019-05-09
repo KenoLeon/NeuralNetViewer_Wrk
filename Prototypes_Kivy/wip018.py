@@ -55,7 +55,6 @@ FROMNEURON = None
 TARGETNEURON = None
 NEURON_LIST = []
 CONNECTION_LIST = []
-
 '''
 Connections.
 # TODO ( week 3 ):
@@ -108,32 +107,31 @@ class Connection(ButtonBehavior, Widget):
         neuronSize = (self.fromNeuron.width / 2) + 2
         markerSize = 6
 
+        # Angled Line:
         angle = atan2((targetNeuron[1] - fromNeuron[1]),
                       (targetNeuron[0] - fromNeuron[0]))
         fromX = fromNeuron[0] + neuronSize * cos(angle)
         fromY = fromNeuron[1] + neuronSize * sin(angle)
-        toX = targetNeuron[0] - (neuronSize + markerSize)* cos(angle)
+        toX = targetNeuron[0] - (neuronSize + markerSize) * cos(angle)
         toY = targetNeuron[1] - (neuronSize + markerSize) * sin(angle)
 
-
         # Arrow marker...POINTS (arrow0, arrow1, arro2):
-        rotation = math.degrees(math.atan2(fromY-toY, toX-fromX))+90
-        arrow0_X = (toX+markerSize*math.sin(math.radians(rotation)))
-        arrow0_Y = (toY+markerSize*math.cos(math.radians(rotation)))
-        arrow1_X = (toX+markerSize*math.sin(math.radians(rotation-120)))
-        arrow1_Y = (toY+markerSize*math.cos(math.radians(rotation-120)))
-        arrow2_X = (toX+markerSize*math.sin(math.radians(rotation+120)))
-        arrow2_Y = (toY+markerSize*math.cos(math.radians(rotation+120)))
-
+        rotation = math.degrees(math.atan2(fromY - toY, toX - fromX)) + 90
+        arrow0_X = (toX + markerSize * math.sin(math.radians(rotation)))
+        arrow0_Y = (toY + markerSize * math.cos(math.radians(rotation)))
+        arrow1_X = (toX + markerSize * math.sin(math.radians(rotation - 120)))
+        arrow1_Y = (toY + markerSize * math.cos(math.radians(rotation - 120)))
+        arrow2_X = (toX + markerSize * math.sin(math.radians(rotation + 120)))
+        arrow2_Y = (toY + markerSize * math.cos(math.radians(rotation + 120)))
 
         self.canvas.clear()
         with self.canvas:
             Color(*RED)
             Line(points=[(fromX, fromY), (toX, toY)], width=0.8)
-            # Line(circle =(markerX, markerY, markerSize))
-            # Ellipse(pos = [markerX, markerY], size = [markerSize, markerSize])
-            Triangle(points=[arrow0_X,arrow0_Y, arrow1_X,arrow1_Y, arrow2_X,arrow2_Y])
-            # Line(points= [(toX, toY), (triangleX2, triangleY2), (triangleX3, triangleY3)], width =0.8)
+            Triangle(points=[
+                arrow0_X, arrow0_Y, arrow1_X, arrow1_Y, arrow2_X, arrow2_Y
+            ])
+
 
 class Neuron(ButtonBehavior, Widget):
 
