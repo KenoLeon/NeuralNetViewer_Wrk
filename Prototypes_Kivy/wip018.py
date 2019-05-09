@@ -59,6 +59,7 @@ CONNECTION_LIST = []
 '''
 Connections.
 # TODO ( week 3 ):
+
  - Affect neurons.
  - Clear all
  - Remove Connection
