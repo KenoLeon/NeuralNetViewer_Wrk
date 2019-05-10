@@ -58,13 +58,8 @@ NEURON_LIST = []
 CONNECTION_LIST = []
 '''
 Connections.
-# TODO ( week 3 ):
 
- - Affect neurons:
-    - Calls from clockscheduler. XXX
-    - Synapse XXX
-    - Connection Update, affect NTLevel. XXX
-    - Color connection. ( draw method )
+# TODO ( week 3 ):
 
  - Clear all
  - Remove Connection
@@ -75,6 +70,11 @@ BUGS:
 
 DONE:
 
+ - Affect neurons:
+    - Calls from clockscheduler. XXX
+    - Synapse XXX
+    - Connection Update, affect NTLevel. XXX
+    - Color connection. ( draw method ) XXX
 - Add Marker XXX
 - Add triangular (arrow marker) XXX
 - Outside to Outside Line XXX
@@ -106,10 +106,17 @@ class Connection(ButtonBehavior, Widget):
         self.fromNeuron = kwargs.get('fromNeuron')
         self.targetNeuron = kwargs.get('targetNeuron')
         self.neuronSize = self.fromNeuron.width
+        self.synapse = False #N
         super(Connection, self).__init__()
         self.draw()
 
     def draw(self, *args):
+
+        if self.synapse == False:
+            color = [1, 0, 0] #RED
+        elif self.synapse == True:
+            color = [0.8, 0.8, 0.8] #White
+
 
         fromNeuron = self.fromNeuron.center
         targetNeuron = self.targetNeuron.center
@@ -135,15 +142,24 @@ class Connection(ButtonBehavior, Widget):
 
         self.canvas.clear()
         with self.canvas:
-            Color(*RED)
+            Color(*color)
             Line(points=[(fromX, fromY), (toX, toY)], width=0.8)
             Triangle(points=[
                 arrow0_X, arrow0_Y, arrow1_X, arrow1_Y, arrow2_X, arrow2_Y
             ])
+        # self.synapse = False
 
     def update(self, *args):
+        # self.synapse = False
         if self.fromNeuron.baseNTLevel >= 1:
+            self.synapse = True
             self.targetNeuron.synapse()
+        else :
+            self.synapse = False
+        self.draw()
+        # if self.synapse == True:
+        #     self.draw()
+        #     self.synapse == False
 
 class Neuron(ButtonBehavior, Widget):
 
