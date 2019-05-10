@@ -9,6 +9,7 @@ Resizable Grid with neurons, hover,place and Animation
 from kivy.config import Config
 # Window :
 Config.set('graphics', 'window_state', 'maximized')
+# Config.set('modules', 'inspector', '')
 # Debug :
 # Config.set('graphics', 'width', '1200')
 # Config.set('graphics', 'height', '600')
@@ -59,7 +60,12 @@ CONNECTION_LIST = []
 Connections.
 # TODO ( week 3 ):
 
- - Affect neurons.
+ - Affect neurons:
+    - Calls from clockscheduler. XXX
+    - Synapse XXX
+    - Connection Update, affect NTLevel. XXX
+    - Color connection. ( draw method )
+
  - Clear all
  - Remove Connection
 
@@ -87,6 +93,9 @@ DONE:
 - Draw all connections, loop logic in grid. XXX
 
 To refinements.
+ - Better synapses.
+ - Refactor Variable (NT level, baseNTLevel)
+
 To next spec.
 
 '''
@@ -132,6 +141,9 @@ class Connection(ButtonBehavior, Widget):
                 arrow0_X, arrow0_Y, arrow1_X, arrow1_Y, arrow2_X, arrow2_Y
             ])
 
+    def update(self, *args):
+        if self.fromNeuron.baseNTLevel >= 1:
+            self.targetNeuron.synapse()
 
 class Neuron(ButtonBehavior, Widget):
 
@@ -244,6 +256,9 @@ class Neuron(ButtonBehavior, Widget):
             elif self.baseNTLevel >= 1:
                 self.redraw()
                 self.baseNTLevel = 0
+
+    def synapse(self, *args):
+        self.baseNTLevel += 0.1
 
 
 class gridNeuronsWidget(Widget):
@@ -409,19 +424,27 @@ class wip018(App):
         if self._play == True:
             Clock.unschedule(self._playStopEvent)
             self._playStopEvent = Clock.schedule_interval(
-                self.updateNeurons, 1 / self._FPS)
+                self.updateAll, 1 / self._FPS)
 
     def playStop(self):
         self._play = not self._play
         if self._play == True:
             self._playStopEvent = Clock.schedule_interval(
-                self.updateNeurons, 1 / self._FPS)
+                self.updateAll, 1 / self._FPS)
         else:
             Clock.unschedule(self._playStopEvent)
+
+    def updateAll(self, *args):
+        self.updateNeurons()
+        self.updateConnections()
 
     def updateNeurons(self, *args):
         for neuron in NEURON_LIST:
             neuron.updateNeuron()
+
+    def updateConnections(self, *args):
+        for connection in CONNECTION_LIST:
+            connection.update()
 
     def toggleConnect(self):
         global CONNECT, PLACE
