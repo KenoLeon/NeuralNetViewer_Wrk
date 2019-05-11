@@ -60,17 +60,18 @@ CONNECTION_LIST = []
 Connections.
 
 # TODO ( week 3 ):
-
- - Clear all
- - Remove Connection
+# - Remove Connection :
 
 BUGS:
-- Connections list called while empty ?
+
 - After grid resize, go back to place neurons.
+- sideBar Sticky with Honey
+
 
 DONE:
 
  - Affect neurons:
+    - Clear all ( New Button )
     - Calls from clockscheduler. XXX
     - Synapse XXX
     - Connection Update, affect NTLevel. XXX
@@ -95,6 +96,7 @@ DONE:
 To refinements.
  - Better synapses.
  - Refactor Variable (NT level, baseNTLevel)
+ -
 
 To next spec.
 
@@ -147,19 +149,14 @@ class Connection(ButtonBehavior, Widget):
             Triangle(points=[
                 arrow0_X, arrow0_Y, arrow1_X, arrow1_Y, arrow2_X, arrow2_Y
             ])
-        # self.synapse = False
 
     def update(self, *args):
-        # self.synapse = False
         if self.fromNeuron.baseNTLevel >= 1:
             self.synapse = True
             self.targetNeuron.synapse()
         else :
             self.synapse = False
         self.draw()
-        # if self.synapse == True:
-        #     self.draw()
-        #     self.synapse == False
 
 class Neuron(ButtonBehavior, Widget):
 
@@ -424,6 +421,10 @@ class wip018(App):
     _FPS = BoundedNumericProperty(24, min=1, max=120, errorvalue=1)
 
     # APP Methods:
+
+    def clear(self):
+        self.grid.reInitGrid()
+
     def updateGrid(self, operation):
         if operation and self.gridSize <= 20:
             self.gridSize += 1
