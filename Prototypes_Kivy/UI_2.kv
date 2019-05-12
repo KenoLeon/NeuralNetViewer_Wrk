@@ -4,12 +4,20 @@ GridLayout:
     spacing: 4
 
     Button:
-        text: 'Clear'
+        text: 'Clear All'
         background_normal: ''
         background_color: .2,.2,.2,1
         size_hint: .25,None
         height: 30
-        on_press: app.clear()
+        on_press: app.clearAll()
+
+    Button:
+        text: 'Clear Connections'
+        background_normal: ''
+        background_color: .2,.2,.2,1
+        size_hint: .25,None
+        height: 30
+        on_press: app.clearConnect()
 
     ToggleButton:
         id: playStop

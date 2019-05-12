@@ -60,8 +60,6 @@ CONNECTION_LIST = []
 Connections.
 
 # TODO ( week 3 ):
-# - Remove Connection...
-# - alt clear connection
 
 
 BUGS ( restart ):
@@ -71,8 +69,8 @@ BUGS ( restart ):
 
 
 DONE:
-
- - Affect neurons:
+- Remove button for connections XXX
+- Affect neurons:
     - Clear all ( New Button )
     - Calls from clockscheduler. XXX
     - Synapse XXX
@@ -105,10 +103,7 @@ To next spec.
 '''
 
 
-class Connection(ButtonBehavior, Widget):
-
-    hovered = False #N
-    mousePos = [] #N
+class Connection(Widget):
 
     def __init__(self, **kwargs):
         self.fromNeuron = kwargs.get('fromNeuron')
@@ -116,22 +111,7 @@ class Connection(ButtonBehavior, Widget):
         self.neuronSize = self.fromNeuron.width
         self.synapse = False #N
         super(Connection, self).__init__()
-        self.always_release = True #N
         self.draw()
-        Window.bind(mouse_pos=self.on_mouse_pos) #N
-
-
-    #N
-    def on_mouse_pos(self, *args):
-        self.mousePos = args[1]
-        inside = self.collide_point(*self.mousePos)
-        if self.hovered == inside:
-            return
-        self.hovered = inside
-        if inside:
-            Window.set_system_cursor('crosshair')
-        else:
-            Window.set_system_cursor('hand')
 
     def draw(self, *args):
 
@@ -169,7 +149,6 @@ class Connection(ButtonBehavior, Widget):
             Triangle(points=[
                 arrow0_X, arrow0_Y, arrow1_X, arrow1_Y, arrow2_X, arrow2_Y
             ])
-        print(self.pos)
 
     def update(self, *args):
         if self.fromNeuron.baseNTLevel >= 1:
@@ -351,6 +330,10 @@ class gridNeuronsWidget(Widget):
         self.removeConnections()
         self.draw()
 
+    def clearConnection(self, *args, **kwargs):
+        self.removeConnections()
+        self.draw()
+
     def drawLine(self, mPos):
         self.drawLayer.canvas.clear()
         with self.drawLayer.canvas:
@@ -443,8 +426,11 @@ class wip018(App):
 
     # APP Methods:
 
-    def clear(self):
+    def clearAll(self):
         self.grid.reInitGrid()
+
+    def clearConnect(self):
+        self.grid.clearConnection()
 
     def updateGrid(self, operation):
         if operation and self.gridSize <= 20:
