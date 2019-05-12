@@ -60,12 +60,14 @@ CONNECTION_LIST = []
 Connections.
 
 # TODO ( week 3 ):
-# - Remove Connection :
+# - Remove Connection...
+# - alt clear connection
 
-BUGS:
 
+BUGS ( restart ):
 - After grid resize, go back to place neurons.
 - sideBar Sticky with Honey
+- Wnen removing an previously placed neuron and then placing it again, the NTLevel remains.
 
 
 DONE:
@@ -104,13 +106,32 @@ To next spec.
 
 
 class Connection(ButtonBehavior, Widget):
+
+    hovered = False #N
+    mousePos = [] #N
+
     def __init__(self, **kwargs):
         self.fromNeuron = kwargs.get('fromNeuron')
         self.targetNeuron = kwargs.get('targetNeuron')
         self.neuronSize = self.fromNeuron.width
         self.synapse = False #N
         super(Connection, self).__init__()
+        self.always_release = True #N
         self.draw()
+        Window.bind(mouse_pos=self.on_mouse_pos) #N
+
+
+    #N
+    def on_mouse_pos(self, *args):
+        self.mousePos = args[1]
+        inside = self.collide_point(*self.mousePos)
+        if self.hovered == inside:
+            return
+        self.hovered = inside
+        if inside:
+            Window.set_system_cursor('crosshair')
+        else:
+            Window.set_system_cursor('hand')
 
     def draw(self, *args):
 
@@ -118,7 +139,6 @@ class Connection(ButtonBehavior, Widget):
             color = [1, 0, 0] #RED
         elif self.synapse == True:
             color = [0.8, 0.8, 0.8] #White
-
 
         fromNeuron = self.fromNeuron.center
         targetNeuron = self.targetNeuron.center
@@ -149,6 +169,7 @@ class Connection(ButtonBehavior, Widget):
             Triangle(points=[
                 arrow0_X, arrow0_Y, arrow1_X, arrow1_Y, arrow2_X, arrow2_Y
             ])
+        print(self.pos)
 
     def update(self, *args):
         if self.fromNeuron.baseNTLevel >= 1:
