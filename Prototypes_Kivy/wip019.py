@@ -65,7 +65,7 @@ Connections.
 # TODO ( week 1 ):
 
 1. Variable NT Level:
-    - UI.
+    - UI XXX
     - Implement.
 
 BUGS ( restart ):
