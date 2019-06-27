@@ -59,6 +59,9 @@ TARGETNEURON = None
 NEURON_LIST = []
 CONNECTION_LIST = []
 
+
+BASENTLEVEL = 0.5
+
 '''
 Connections.
 
@@ -66,7 +69,8 @@ Connections.
 
 1. Variable NT Level:
     - UI XXX
-    - Implement.
+    - Implement. XXX
+    - Test.
 
 BUGS ( restart ):
 - After grid resize, go back to place neurons.
@@ -135,9 +139,8 @@ class Connection(Widget):
         self.draw()
 
 class Neuron(ButtonBehavior, Widget):
-
     hovered = False
-    baseNTLevel = 0.4
+    baseNTLevel = BASENTLEVEL
     mousePos = []
 
     def __init__(self, **kwargs):
@@ -224,6 +227,7 @@ class Neuron(ButtonBehavior, Widget):
         TARGETNEURON = None
         if PLACE:
             self.place = not self.place
+            self.baseNTLevel = BASENTLEVEL
             self.draw()
             self.redraw()
         elif CONNECT and self.place:
@@ -400,6 +404,8 @@ class wip018(App):
     _connectEvent = None
     _FPS = BoundedNumericProperty(24, min=1, max=120, errorvalue=1)
 
+    _BNTL = BoundedNumericProperty(5, min=0, max=10, errorvalue=5)
+
     # APP Methods:
 
     def clearAll(self):
@@ -425,6 +431,15 @@ class wip018(App):
             Clock.unschedule(self._playStopEvent)
             self._playStopEvent = Clock.schedule_interval(
                 self.updateAll, 1 / self._FPS)
+
+    def updateBNTL(self, operation):
+        global BASENTLEVEL
+        if operation == True:
+            self._BNTL += 1
+        else:
+            self._BNTL -= 1
+        BASENTLEVEL = self._BNTL/10
+
 
     def playStop(self):
         self._play = not self._play

@@ -111,7 +111,7 @@ GridLayout:
             background_color: .2,.2,.2,1
             size_hint: .25,None
             height: 40
-            on_press: app.updateFPS(False)
+            on_press: app.updateBNTL(False)
         Label:
             canvas.before:
                 Color:
@@ -120,7 +120,7 @@ GridLayout:
                     pos: self.pos
                     size: self.size
             color: 0.6,0.6,0.6,1
-            text: str(app._FPS)
+            text: str(app._BNTL/10)
             font_size: 14
             size_hint: 0.25,0
             height: 40
@@ -130,4 +130,4 @@ GridLayout:
             background_color: .2,.2,.2,1
             size_hint: .25,None
             height: 40
-            on_press: app.updateFPS(True)
+            on_press: app.updateBNTL(True)
