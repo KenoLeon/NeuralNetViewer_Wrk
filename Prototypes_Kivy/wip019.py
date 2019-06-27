@@ -59,18 +59,19 @@ TARGETNEURON = None
 NEURON_LIST = []
 CONNECTION_LIST = []
 
-
 BASENTLEVEL = 0.5
+CONNECTION_WEIGHT = 1
 
 '''
-Connections.
 
 # TODO ( week 1 ):
 
-1. Variable NT Level:
-    - UI XXX
-    - Implement. XXX
-    - Test.
+2. Variable (but fixed ) connection weights:
+
+    - UI
+    - Implement
+    - Display
+    - Test
 
 BUGS ( restart ):
 - After grid resize, go back to place neurons.
@@ -80,6 +81,15 @@ BUGS ( restart ):
 REFACTOR:
  - Better synapses ??
  - Refactor Variable (NT level, baseNTLevel)
+
+
+Done
+
+1. Variable Baseline NT Level:
+    - UI XXX
+    - Implement. XXX
+    - Test.
+
 '''
 
 
@@ -90,6 +100,7 @@ class Connection(Widget):
         self.targetNeuron = kwargs.get('targetNeuron')
         self.neuronSize = self.fromNeuron.width
         self.synapse = False #N
+        self.weight = CONNECTION_WEIGHT
         super(Connection, self).__init__()
         self.draw()
 
@@ -133,7 +144,8 @@ class Connection(Widget):
     def update(self, *args):
         if self.fromNeuron.baseNTLevel >= 1:
             self.synapse = True
-            self.targetNeuron.synapse()
+            self.targetNeuron.synapse(self.weight)
+
         else :
             self.synapse = False
         self.draw()
@@ -250,8 +262,8 @@ class Neuron(ButtonBehavior, Widget):
                 self.redraw()
                 self.baseNTLevel = 0
 
-    def synapse(self, *args):
-        self.baseNTLevel += 0.1
+    def synapse(self, weight):
+        self.baseNTLevel += weight
 
 
 class gridNeuronsWidget(Widget):

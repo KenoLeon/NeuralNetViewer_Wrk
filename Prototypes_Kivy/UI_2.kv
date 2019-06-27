@@ -131,3 +131,44 @@ GridLayout:
             size_hint: .25,None
             height: 40
             on_press: app.updateBNTL(True)
+
+    Widget:
+        size: 200, 40
+        size_hint: None, None
+
+    GridLayout:
+        width: 200
+        padding: 4
+        cols: 4
+        Label:
+            color: 0.6,0.6,0.6,1
+            text: 'Con. Weight'
+            font_size: 14
+            size_hint: None,None
+            height: 40
+        Button:
+            text: '-'
+            background_normal: ''
+            background_color: .2,.2,.2,1
+            size_hint: .25,None
+            height: 40
+            on_press: app.updateBNTL(False)
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.2, 0.2, 0.2, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            color: 0.6,0.6,0.6,1
+            text: str(app._BNTL/10)
+            font_size: 14
+            size_hint: 0.25,0
+            height: 40
+        Button:
+            text: '+'
+            background_normal: ''
+            background_color: .2,.2,.2,1
+            size_hint: .25,None
+            height: 40
+            on_press: app.updateBNTL(True)
