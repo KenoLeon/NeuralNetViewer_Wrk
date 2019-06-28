@@ -107,10 +107,19 @@ class Connection(Widget):
 
     def draw(self, *args):
 
+        # 15 82 186
+        # colorWeight = [0.05, 0.32, 0.72, 1]
+
+        # 70 130 180
+        # colorWeight = [0.27, 0.50, 0.70, 1]
+
+
         if self.synapse == False:
             color = [1, 0, 0] #RED
+            colorWeight = [0.27, 0.50, 0.70, 1]
         elif self.synapse == True:
             color = [0.8, 0.8, 0.8] #White
+            colorWeight = [0.8, 0.8, 0.8]
 
         fromNeuron = self.fromNeuron.center
         targetNeuron = self.targetNeuron.center
@@ -137,10 +146,20 @@ class Connection(Widget):
         self.canvas.clear()
         with self.canvas:
             Color(*color)
-            Line(points=[(fromX, fromY), (toX, toY)], width=0.8)
+            Line(points=[(fromX, fromY), (toX, toY)], width=0.6)
             Triangle(points=[
                 arrow0_X, arrow0_Y, arrow1_X, arrow1_Y, arrow2_X, arrow2_Y
             ])
+            # Weight line :
+            # Center :
+            Color(*colorWeight)
+            t = self.weight
+            Cx = fromX * (1-t) + toX * t
+            Cy = fromY * (1-t) + toY * t
+            #
+            Line(points=[(fromX, fromY), (Cx, Cy)], width=1.2)
+
+
 
     def update(self, *args):
         if self.fromNeuron.baseNTLevel >= 1:
@@ -406,7 +425,7 @@ class gridNeuronsWidget(Widget):
             connection.draw()
 
 
-class wip018(App):
+class wip019(App):
     # APP VARS:
     title = "NNV - wip018"
     grid = gridNeuronsWidget()
@@ -523,4 +542,4 @@ class wip018(App):
 
 
 if __name__ == "__main__":
-    wip018().run()
+    wip019().run()
