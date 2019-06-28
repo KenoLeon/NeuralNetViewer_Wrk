@@ -60,7 +60,7 @@ NEURON_LIST = []
 CONNECTION_LIST = []
 
 BASENTLEVEL = 0.5
-CONNECTION_WEIGHT = 1
+CONNECTION_WEIGHT = 0.1
 
 '''
 
@@ -68,8 +68,9 @@ CONNECTION_WEIGHT = 1
 
 2. Variable (but fixed ) connection weights:
 
-    - UI
-    - Implement
+    - UI XXX
+    - Implement XXX
+
     - Display
     - Test
 
@@ -85,7 +86,7 @@ REFACTOR:
 
 Done
 
-1. Variable Baseline NT Level:
+1. Variable (But fixed) Baseline NT Level:
     - UI XXX
     - Implement. XXX
     - Test.
@@ -266,6 +267,7 @@ class Neuron(ButtonBehavior, Widget):
         self.baseNTLevel += weight
 
 
+
 class gridNeuronsWidget(Widget):
     def __init__(self, *args, **kwargs):
         Widget.__init__(self, *args, **kwargs)
@@ -415,8 +417,8 @@ class wip018(App):
     _playStopEvent = None
     _connectEvent = None
     _FPS = BoundedNumericProperty(24, min=1, max=120, errorvalue=1)
-
     _BNTL = BoundedNumericProperty(5, min=0, max=10, errorvalue=5)
+    _CONN_WEIGHT = BoundedNumericProperty(1, min=1, max=10, errorvalue=1)
 
     # APP Methods:
 
@@ -451,6 +453,15 @@ class wip018(App):
         else:
             self._BNTL -= 1
         BASENTLEVEL = self._BNTL/10
+
+
+    def updateConnWeight(self, operation):
+        global CONNECTION_WEIGHT
+        if operation == True:
+            self._CONN_WEIGHT += 1
+        else:
+            self._CONN_WEIGHT -= 1
+        CONNECTION_WEIGHT = self._CONN_WEIGHT/10
 
 
     def playStop(self):
