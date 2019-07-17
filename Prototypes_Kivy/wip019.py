@@ -64,17 +64,9 @@ CONNECTION_WEIGHT = 0.1
 
 '''
 
-# TODO ( week 1 ):
+# TODO:
 
-2. Variable (but fixed ) connection weights:
-
-    - UI XXX
-    - Implement XXX
-
-    - Display
-    - Test
-
-BUGS ( restart ):
+BUGS :
 - After grid resize, go back to place neurons.
 - sideBar Sticky with Honey
 - Wnen removing an previously placed neuron and then placing it again, the NTLevel remains.
@@ -90,6 +82,17 @@ Done
     - UI XXX
     - Implement. XXX
     - Test.
+
+
+2. Variable (but fixed ) connection weights:
+
+    - UI XXX
+    - Implement XXX
+
+    - Display XXX
+    - Test XXX
+
+    - vertical line on connection weight XXX
 
 '''
 
@@ -143,6 +146,7 @@ class Connection(Widget):
         arrow2_X = (toX + markerSize * math.sin(math.radians(rotation + 120)))
         arrow2_Y = (toY + markerSize * math.cos(math.radians(rotation + 120)))
 
+
         self.canvas.clear()
         with self.canvas:
             Color(*color)
@@ -156,8 +160,27 @@ class Connection(Widget):
             t = self.weight
             Cx = fromX * (1-t) + toX * t
             Cy = fromY * (1-t) + toY * t
+
+            # vertical tangent line:
+            vX = fromX - Cx
+            vY = fromY - Cy
+            mag = sqrt(vX*vX + vY *vY)
+            vX = vX / mag
+            vY = vY / mag
+            temp = vX
+            vX = -vY
+            vY = temp
+            vLLength = 4
+            vL1x = Cx + vX * vLLength
+            vL1y = Cy + vY * vLLength
+            vL2x = Cx + vX * -vLLength
+            vL2y = Cy + vY * -vLLength
             #
+
+
             Line(points=[(fromX, fromY), (Cx, Cy)], width=1.2)
+            Line(points=[(Cx, Cy), (vL1x, vL1y)], width=1)
+            Line(points=[(Cx, Cy), (vL2x, vL2y)], width=1)
 
 
 
