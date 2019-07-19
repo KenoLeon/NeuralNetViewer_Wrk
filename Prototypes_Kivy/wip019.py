@@ -66,6 +66,7 @@ CONNECTION_WEIGHT = 0.1
 
 # TODO:
 
+
 BUGS :
 - After grid resize, go back to place neurons.
 - sideBar Sticky with Honey
@@ -162,25 +163,25 @@ class Connection(Widget):
             Cy = fromY * (1-t) + toY * t
 
             # vertical tangent line:
-            vX = fromX - Cx
-            vY = fromY - Cy
-            mag = sqrt(vX*vX + vY *vY)
-            vX = vX / mag
-            vY = vY / mag
-            temp = vX
-            vX = -vY
-            vY = temp
-            vLLength = 4
-            vL1x = Cx + vX * vLLength
-            vL1y = Cy + vY * vLLength
-            vL2x = Cx + vX * -vLLength
-            vL2y = Cy + vY * -vLLength
+            # vX = fromX - Cx
+            # vY = fromY - Cy
+            # mag = sqrt(vX*vX + vY *vY)
+            # vX = vX / mag
+            # vY = vY / mag
+            # temp = vX
+            # vX = -vY
+            # vY = temp
+            # vLLength = 4
+            # vL1x = Cx + vX * vLLength
+            # vL1y = Cy + vY * vLLength
+            # vL2x = Cx + vX * -vLLength
+            # vL2y = Cy + vY * -vLLength
             #
 
 
-            Line(points=[(fromX, fromY), (Cx, Cy)], width=1.2)
-            Line(points=[(Cx, Cy), (vL1x, vL1y)], width=1)
-            Line(points=[(Cx, Cy), (vL2x, vL2y)], width=1)
+            Line(points=[(fromX, fromY), (Cx, Cy)], width=2.8, cap='square')
+            # Line(points=[(Cx, Cy), (vL1x, vL1y)], width=1)
+            # Line(points=[(Cx, Cy), (vL2x, vL2y)], width=1)
 
 
 
