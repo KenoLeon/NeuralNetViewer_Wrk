@@ -66,6 +66,10 @@ CONNECTION_WEIGHT = 0.1
 
 # TODO:
 
+- Inhibitory Neurons :
+
+- Add UI.
+
 
 BUGS :
 - After grid resize, go back to place neurons.
