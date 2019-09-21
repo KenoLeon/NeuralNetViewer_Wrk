@@ -94,6 +94,34 @@ GridLayout:
         on_press: app.toggleConnect()
         size: 200, 40
         size_hint: None, None
+    Label:
+        text: 'Connection Type:'
+        height: 40
+        size: 200, 40
+        size_hint: None, None
+    ToggleButton:
+        id: connectToggle
+        font_size: 14
+        group: "c_Type"
+        text: 'Excitatory'
+        background_normal: ''
+        background_color: .2,.2,.2,1
+        height: 40
+        state: 'down'
+        # on_press: app.toggleConnect()
+        # size: 200, 40
+        size_hint: .25, None
+    ToggleButton:
+        id: connectToggle
+        font_size: 14
+        group: "c_Type"
+        text: 'Inhibitory'
+        background_normal: ''
+        background_color: .2,.2,.2,1
+        height: 40
+        # on_press: app.toggleConnect()
+        # size: 200, 40
+        size_hint: .25, None
 
     GridLayout:
         width: 200
