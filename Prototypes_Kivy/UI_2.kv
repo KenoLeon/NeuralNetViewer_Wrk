@@ -108,8 +108,8 @@ GridLayout:
         background_color: .2,.2,.2,1
         height: 40
         state: 'down'
-        # on_press: app.toggleConnect()
-        # size: 200, 40
+        on_press: app.updateCTYPE(False)
+        size: 200, 40
         size_hint: .25, None
     ToggleButton:
         id: connectToggle
@@ -119,8 +119,8 @@ GridLayout:
         background_normal: ''
         background_color: .2,.2,.2,1
         height: 40
-        # on_press: app.toggleConnect()
-        # size: 200, 40
+        on_press: app.updateCTYPE(True)
+        size: 200, 40
         size_hint: .25, None
 
     GridLayout:

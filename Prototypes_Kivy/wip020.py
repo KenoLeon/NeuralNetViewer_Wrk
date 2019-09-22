@@ -37,8 +37,8 @@ YMARGIN = 60
 OUTLINE_WIDTH = 2
 
 # COLORS:
-BACKGROUND_COLOR = SOMA_COLOR = [0.1, 0.1, 0.1]
-GRID_COLOR = OUTLINE_COLOR = [0.6, 0.6, 0.6]
+BACKGROUND_COLOR = SOMA_COLOR  = [0.1, 0.1, 0.1]
+GRID_COLOR = OUTLINE_COLOR = WEIGHT_COLOR = [0.6, 0.6, 0.6]
 
 # TEST COLORS:
 RED = [1, 0, 0]
@@ -46,6 +46,7 @@ RED = [1, 0, 0]
 # GLOBALS
 PLACE = True
 CONNECT = False
+CTYPE = True #True (Exitatory) #False (Inhibitory)
 DRAGGING = False
 DRAG_START = ()
 DRAG_END = ()
@@ -63,7 +64,15 @@ CONNECTION_WEIGHT = 0.1
 # TODO:
 
 - Inhibitory Neurons :
-- Add UI.
+- Add UI XXX
+- Implement:
+    Trace_UI XXX
+    GLOBAL XXX
+    Connection XXX
+    Neuron + Test
+
+- Graphics :
+    End Caps Connection type
 
 BUGS :
 - After grid resize, go back to place neurons.
@@ -85,6 +94,7 @@ class Connection(Widget):
         self.neuronSize = self.fromNeuron.width
         self.synapse = False #N
         self.weight = CONNECTION_WEIGHT
+        self.type = CTYPE
         super(Connection, self).__init__()
         self.draw()
 
@@ -98,8 +108,12 @@ class Connection(Widget):
 
 
         if self.synapse == False:
-            color = [1, 0, 0] #RED
-            colorWeight = [0.27, 0.50, 0.70, 1]
+            if self.type == True:
+                color = [1, 0, 0] #RED
+            else:
+                color = [0, 0, 1] #BLUE
+            # colorWeight = [0.27, 0.50, 0.70, 1]
+            colorWeight = WEIGHT_COLOR
         elif self.synapse == True:
             color = [0.8, 0.8, 0.8] #White
             colorWeight = [0.8, 0.8, 0.8]
@@ -167,8 +181,11 @@ class Connection(Widget):
     def update(self, *args):
         if self.fromNeuron.baseNTLevel >= 1:
             self.synapse = True
-            self.targetNeuron.synapse(self.weight)
-
+            if self.type == True:
+            # byfurk for type
+                self.targetNeuron.synapse(self.weight)
+            else:
+                self.targetNeuron.synapse(-self.weight)
         else :
             self.synapse = False
         self.draw()
@@ -485,6 +502,10 @@ class wip020(App):
             self._CONN_WEIGHT -= 1
         CONNECTION_WEIGHT = self._CONN_WEIGHT/10
 
+
+    def updateCTYPE(self,c_type):
+        global CTYPE
+        CTYPE = not CTYPE
 
     def playStop(self):
         self._play = not self._play

@@ -10,14 +10,15 @@ throw an exception during the kv language processing.
 '''
 
 # Uncomment these lines to see all the messages
-from kivy.logger import Logger
-import logging
-Logger.setLevel(logging.TRACE)
+# from kivy.logger import Logger
+# import logging
+# Logger.setLevel(logging.TRACE)
 
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
-import time
+import cv2
+# import time
 Builder.load_string('''
 <CameraClick>:
     orientation: 'vertical'
